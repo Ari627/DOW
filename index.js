@@ -15,6 +15,7 @@ $(document).ready(function () {
     "clinkz", "warlock"
   ];
 
+  // Tambahkan opsi hero ke dalam select
   for (var i = 0; i < heroes.length; i++) {
     $("#example-multiselect").append(
       $(`<option>`, {
@@ -24,6 +25,7 @@ $(document).ready(function () {
     );
   }
 
+  // Inisialisasi multiselect
   $("#example-multiselect").multiselect({
     nonSelectedText: "Select the Heroes",
     allSelectedText: "All Heroes selected",
@@ -39,20 +41,22 @@ $(document).ready(function () {
       var selectedImagesHtml = "";
 
       selectedImages.each(function () {
+        var heroName = $(this).text().toLowerCase();
+        var firstImage = `<img class="rounded images" src="./assets/img/${heroName}_1.png" alt="">`;
+        var secondImage = `<img class="rounded images" src="./assets/img/${heroName}_2.png" alt="">`;
+
+        // Menambahkan gambar pertama dan kedua
         selectedImagesHtml += 
-          // Menambahkan gambar dengan nomor sesuai dengan format (misalnya: hero_1.png)
           '<h4 class="text-white text-center">' + $(this).text() + '</h4>' + 
-          '<img class="rounded images" src="./assets/img/' + 
-          $(this).text().toLowerCase() + "_1" + 
-          '.png" alt=""> ' + // Gambar pertama
-          '<img class="rounded images" src="./assets/img/' + 
-          $(this).text().toLowerCase() + "_2" + 
-          '.png" alt=""> '; // Gambar kedua (jika ada)
+          firstImage + ' ' + secondImage + ' '; // Gambar pertama dan kedua
       });
 
+      // Atur ketinggian container berdasarkan pilihan
       if (selectedImages.length > 2) {
         $(".container").css("height", "auto !important");
       }
+
+      // Masukkan gambar-gambar terpilih ke dalam div dengan id selected-images
       $("#selected-images").html(selectedImagesHtml);
     },
   });
