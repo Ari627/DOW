@@ -15,7 +15,7 @@ $(document).ready(function () {
     "clinkz", "warlock"
   ];
 
-  // Tambahkan opsi hero ke dalam select
+  // Menambahkan hero ke dalam multiselect
   for (var i = 0; i < heroes.length; i++) {
     $("#example-multiselect").append(
       $(`<option>`, {
@@ -40,24 +40,34 @@ $(document).ready(function () {
       var selectedImages = $("#example-multiselect option:selected");
       var selectedImagesHtml = "";
 
+      // Loop untuk setiap hero yang dipilih
       selectedImages.each(function () {
         var heroName = $(this).text().toLowerCase();
-        var firstImage = `<img class="rounded images" src="./assets/img/${heroName}_1.png" alt="">`;
-        var secondImage = `<img class="rounded images" src="./assets/img/${heroName}_2.png" alt="">`;
+        var firstImage = './assets/img/' + heroName + "_1.png";  // Gambar pertama
+        var secondImage = './assets/img/' + heroName + "_2.png"; // Gambar kedua
 
-        // Menambahkan gambar pertama dan kedua
+        // Tambahkan gambar pertama dan kedua (jika ada)
         selectedImagesHtml += 
-          '<h4 class="text-white text-center">' + $(this).text() + '</h4>' + 
-          firstImage + ' ' + secondImage + ' '; // Gambar pertama dan kedua
+          '<h4 class="text-white text-center">' + $(this).text() + '</h4>' +
+          '<img class="rounded images" src="' + firstImage + '" alt=""> '; // Gambar pertama
+        
+        // Periksa apakah gambar kedua ada dan tampilkan
+        if (imageExists(secondImage)) {
+          selectedImagesHtml += 
+            '<img class="rounded images" src="' + secondImage + '" alt=""> '; // Gambar kedua
+        }
       });
 
-      // Atur ketinggian container berdasarkan pilihan
-      if (selectedImages.length > 2) {
-        $(".container").css("height", "auto !important");
-      }
-
-      // Masukkan gambar-gambar terpilih ke dalam div dengan id selected-images
+      // Update konten HTML
       $("#selected-images").html(selectedImagesHtml);
     },
   });
+
+  // Fungsi untuk memeriksa apakah gambar ada di folder
+  function imageExists(imageUrl) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', imageUrl, false);
+    http.send();
+    return http.status !== 404;
+  }
 });
