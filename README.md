@@ -7,8 +7,6 @@
 
 <h2>🚀 Demo</h2>
 
-[https://kelvin-cod.github.io/Dawn-of-war-builds/](https://kelvin-cod.github.io/Dawn-of-war-builds/)
-
   
   
 <h2>💻 Built with</h2>
