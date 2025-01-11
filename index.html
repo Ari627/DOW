@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dawn of war builds</title>
+    <title>Dawn of War Builds</title>
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon-32x32.png">
-    <link rel="stylesheet" href="./styles.css">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <style>
         /* CSS tambahan untuk menjaga gambar agar tidak bertabrakan */
         #selected-images {
@@ -28,27 +23,15 @@
         }
     </style>
 </head>
-
 <body>
     <header>
         <nav class="navbar navbar-expand-sm sticky-top bg-body-tertiary border-bottom border-body" style="background-color: #e3f2fd;">
             <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav ">
-                        <li class="nav-item active">
-                            <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
-                        </li>
-                    </ul>
-                </div>
-                <form class="d-flex justify-content-end" role="button">
-                    <div class="mr-4 pt-2">
-                        <a class="nav-link me-3" href="https://t.me/DOWdota2" target="_blank">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Telegram_Logo_2019.svg" alt="Telegram" class="discord" style="width: 24px; height: 24px; vertical-align: middle;">
-                            Telegram
-                        </a>
-                    </div>
-                    <div class="pt-2 mr-4"></div>
-                </form>
+                <ul class="navbar-nav ">
+                    <li class="nav-item active">
+                        <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>
@@ -58,19 +41,23 @@
             <h2 class="text-center text-white title">DAWN OF WAR BUILDS</h2>
 
             <div class="input-group" id="controls">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search heroes..." aria-label="Search heroes..." aria-describedby="ocultar">
-                <button class="btn btn-outline-warning" onclick="toggleSelectedHeroes()" type="button" id="ocultar" disabled>Show/Hide Selections</button>
+                <input type="text" class="form-control" id="searchInput" placeholder="Search heroes...">
+                <button class="btn btn-outline-warning" type="button" id="ocultar">Show/Hide Selections</button>
             </div>
+
             <div>
-                <p class="btn text-danger" onclick="limparHeroisSelecionados()" id="clearSelections">
+                <p class="btn text-danger" id="clearSelections">
                     <img src="./assets/cancel.png" alt="" style="width: 24px;"> Clear Selections
                 </p>
             </div>
 
             <div>
-                <div id="container" class="mt-2"></div>
-
-                <h2 id="resp" class="text-white"></h2>
+                <!-- Daftar Hero yang dapat dipilih -->
+                <select id="example-multiselect" multiple>
+                    <option value="alchemist">Alchemist</option>
+                    <option value="abaddon">Abaddon</option>
+                    <!-- Anda dapat menambahkan lebih banyak hero di sini -->
+                </select>
 
                 <!-- Area untuk menampilkan gambar hero yang dipilih -->
                 <div id="selected-images" class="text-center"></div>
@@ -84,71 +71,27 @@
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <script src="./scripts/selectimages.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            var heroes = [
-                "abaddon", "alchemist", "ancient apparition", "anti-mage", "arc warden", "axe", "bane", "batrider", "beastmaster", "bounty hunter", 
-                "brewmaster", "bristleback", "broodmother", "centaur warrunner", "chaos knight", "chen", "clinkz", "crystal maiden", "dark seer", 
-                "dazzle", "death prophet", "disruptor", "doom", "dragon knight", "drow ranger", "earth spirit", "earthshaker", "elder titan", 
-                "ember spirit", "enchantress", "enigma", "faceless void", "grimstroke", "gyrocopter", "huskar", "invoker", "io", "iron branch", 
-                "juggernaut", "keeper of the light", "kunkka", "legion commander", "leshrac", "lich", "lifestealer", "lina", "lion", "lone druid", 
-                "luna", "lycan", "magnus", "marci", "mars", "medusa", "meepo", "mirana", "monkey king", "morphling", "naga siren", "nature's prophet", 
-                "necrophos", "night stalker", "nyx assassin", "ogre magi", "oracle", "outworld destroyer", "pangolier", "phantom assassin", 
-                "phantom lancer", "puck", "pugna", "riki", "rubick", "sand king", "shadow demon", "shadow fiend", "shaman", "silencer", "slardar", 
-                "slark", "sniper", "spectre", "spirit breaker", "storm spirit", "sven", "tinker", "tiny", "treant protector", "troll warlord", 
-                "tidehunter", "timbersaw", "underlord", "undying", "ursa", "vengeful spirit", "venomancer", "viper", "warlock", "weaver", "windranger", 
-                "winter wyvern", "wraith king", "zeus", "visage", "hoodwink", "snapfire", "dawnbreaker", "witch doctor", "void spirit", "dark willow", 
-                "mars", "underlord", "oracle", "shaman", "queen of pain", "treant protector", "sven", "pugna", "lone druid", "grimstroke", 
-                "clinkz", "warlock"
-            ];
+            // Handle when selection changes
+            $("#example-multiselect").on("change", function () {
+                var selectedHeroes = $("#example-multiselect option:selected");
+                var selectedImagesHtml = "";
 
-            for (var i = 0; i < heroes.length; i++) {
-                $("#example-multiselect").append(
-                    $(`<option>`, {
-                        value: heroes[i].toLowerCase(),
-                        text: heroes[i],
-                    })
-                );
-            }
+                selectedHeroes.each(function () {
+                    var heroName = $(this).val().toLowerCase();
+                    selectedImagesHtml += 
+                        '<h4 class="text-white text-center">' + $(this).text() + '</h4>' + 
+                        '<img class="rounded images" src="./assets/img/' + heroName + "_1.png" + '" alt="' + heroName + ' image 1"> ' + 
+                        '<img class="rounded images" src="./assets/img/' + heroName + "_2.png" + '" alt="' + heroName + ' image 2"> ';
+                });
 
-            $("#example-multiselect").multiselect({
-                nonSelectedText: "Select the Heroes",
-                allSelectedText: "All Heroes selected",
-                nSelectedText: " Heroes Selected",
-                buttonWidth: "100%",
-                enableFiltering: true,
-                filterBehavior: "value",
-                filterPlaceholder: "Search...",
-                maxHeight: 500,
-                selectedClass: "active multiselect-selected",
-                onChange: function (option, checked) {
-                    var selectedImages = $("#example-multiselect option:selected");
-                    var selectedImagesHtml = "";
-
-                    selectedImages.each(function () {
-                        selectedImagesHtml += 
-                            '<h4 class="text-white text-center">' + $(this).text() + '</h4>' + 
-                            '<img class="rounded images" src="./assets/img/' + 
-                            $(this).text().toLowerCase() + "_1" + 
-                            '.png" alt=""> ' + // Gambar pertama
-                            '<img class="rounded images" src="./assets/img/' + 
-                            $(this).text().toLowerCase() + "_2" + 
-                            '.png" alt=""> '; // Gambar kedua (jika ada)
-                    });
-
-                    if (selectedImages.length > 2) {
-                        $(".container").css("height", "auto !important");
-                    }
-                    $("#selected-images").html(selectedImagesHtml);
-                },
+                $("#selected-images").html(selectedImagesHtml);
             });
         });
     </script>
 </body>
-
 </html>
