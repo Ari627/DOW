@@ -17,7 +17,7 @@ var heroesImages = [
 },
 {
     heroName: "anti-mage",
-    imageURL: "./assets/img/anti-mage_1.png",
+    imageURL: "./assets/img/anti_1.png",
 },
 {
     heroName: "arc warden",
