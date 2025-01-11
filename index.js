@@ -7,7 +7,7 @@ $(document).ready(function () {
     "juggernaut", "keeper of the light", "kunkka", "legion commander", "leshrac", "lich", "lifestealer", "lina", "lion", "lone druid", 
     "luna", "lycan", "magnus", "marci", "mars", "medusa", "meepo", "mirana", "monkey king", "morphling", "naga siren", "nature's prophet", 
     "necrophos", "night stalker", "nyx assassin", "ogre magi", "oracle", "outworld destroyer", "pangolier", "phantom assassin", 
-    "phantom lancer", "puck", "pugna", "riki", "rubick", "sand king", "shadow demon", "shadow fiend", "shaman", "silencer", "slardar", 
+    "phantom lancer", "puck", "pugna", "pudge" "riki", "rubick", "sand king", "shadow demon", "shadow fiend", "shaman", "silencer", "slardar", 
     "slark", "sniper", "spectre", "spirit breaker", "storm spirit", "sven", "tinker", "tiny", "treant protector", "troll warlord", 
     "tidehunter", "timbersaw", "underlord", "undying", "ursa", "vengeful spirit", "venomancer", "viper", "warlock", "weaver", "windranger", 
     "winter wyvern", "wraith king", "zeus", "visage", "hoodwink", "snapfire", "dawnbreaker", "witch doctor", "void spirit", "dark willow", 
