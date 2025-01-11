@@ -8,6 +8,10 @@ var heroesImages = [
     imageURL: "./assets/img/abaddon_1.png",
   },
   {
+    heroName: "abaddon",
+    imageURL: "./assets/img/abaddon_2.png",
+  },
+  {
     heroName: "bloodseeker",
     imageURL: "./assets/img/bloodseeker_1.png",
   },
