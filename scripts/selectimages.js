@@ -1,592 +1,131 @@
-var selectedHeroes = []; // Array para armazenar os heróis selecionados
-var showSelected = false;
-let url = "https://api.opendota.com/api/heroes"; // url da api
+// Array of selected heroes
+var selectedHeroes = []; 
 
+// Array containing hero images and names
 var heroesImages = [
-  {
-    heroName: "abaddon",
-    imageURL: "./assets/img/abaddon_1.png",
-  },
-  {
-    heroName: "alchemist",
-    imageURL: "./assets/img/alchemist_1.png",
-  },
-  {
-    heroName: "alchemist",
-    imageURL: "./assets/img/alchemist_2.png", // Gambar kedua untuk Alchemist
-  },
-{
-    heroName: "ancient apparition",
-    imageURL: "./assets/img/ancient apparition_1.png",
-},
-{
-    heroName: "anti-mage",
-    imageURL: "./assets/img/anti-mage_1.png",
-},
-{
-    heroName: "arc warden",
-    imageURL: "./assets/img/arc warden_1.png",
-},
-{
-    heroName: "axe",
-    imageURL: "./assets/img/axe_1.png",
-},
-{
-    heroName: "bane",
-    imageURL: "./assets/img/bane_1.png",
-},
-{
-    heroName: "batrider",
-    imageURL: "./assets/img/batrider_1.png",
-},
-{
-    heroName: "beastmaster",
-    imageURL: "./assets/img/beastmaster_1.png",
-},
-{
-    heroName: "bounty hunter",
-    imageURL: "./assets/img/bounty hunter_1.png",
-},
-{
-    heroName: "brewmaster",
-    imageURL: "./assets/img/brewmaster_1.png",
-},
-{
-    heroName: "bristleback",
-    imageURL: "./assets/img/bristleback_1.png",
-},
-{
-    heroName: "broodmother",
-    imageURL: "./assets/img/broodmother_1.png",
-},
-{
-    heroName: "centaur warrunner",
-    imageURL: "./assets/img/centaur warrunner_1.png",
-},
-{
-    heroName: "chaos knight",
-    imageURL: "./assets/img/chaos knight_1.png",
-},
-{
-    heroName: "chen",
-    imageURL: "./assets/img/chen_1.png",
-},
-{
-    heroName: "clinkz",
-    imageURL: "./assets/img/clinkz_1.png",
-},
-{
-    heroName: "crystal maiden",
-    imageURL: "./assets/img/crystal maiden_1.png",
-},
-{
-    heroName: "dark seer",
-    imageURL: "./assets/img/dark seer_1.png",
-},
-{
-    heroName: "dazzle",
-    imageURL: "./assets/img/dazzle_1.png",
-},
-{
-    heroName: "death prophet",
-    imageURL: "./assets/img/death prophet_1.png",
-},
-{
-    heroName: "disruptor",
-    imageURL: "./assets/img/disruptor_1.png",
-},
-{
-    heroName: "doom",
-    imageURL: "./assets/img/doom_1.png",
-},
-{
-    heroName: "dragon knight",
-    imageURL: "./assets/img/dragon knight_1.png",
-},
-{
-    heroName: "drow ranger",
-    imageURL: "./assets/img/drow ranger_1.png",
-},
-{
-    heroName: "earth spirit",
-    imageURL: "./assets/img/earth spirit_1.png",
-},
-{
-    heroName: "earthshaker",
-    imageURL: "./assets/img/earthshaker_1.png",
-},
-{
-    heroName: "elder titan",
-    imageURL: "./assets/img/elder titan_1.png",
-},
-{
-    heroName: "ember spirit",
-    imageURL: "./assets/img/ember spirit_1.png",
-},
-{
-    heroName: "enchantress",
-    imageURL: "./assets/img/enchantress_1.png",
-},
-{
-    heroName: "enigma",
-    imageURL: "./assets/img/enigma_1.png",
-},
-{
-    heroName: "faceless void",
-    imageURL: "./assets/img/faceless void_1.png",
-},
-{
-    heroName: "grimstroke",
-    imageURL: "./assets/img/grimstroke_1.png",
-},
-{
-    heroName: "gyrocopter",
-    imageURL: "./assets/img/gyrocopter_1.png",
-},
-{
-    heroName: "huskar",
-    imageURL: "./assets/img/huskar_1.png",
-},
-{
-    heroName: "invoker",
-    imageURL: "./assets/img/invoker_1.png",
-},
-{
-    heroName: "io",
-    imageURL: "./assets/img/io_1.png",
-},
-{
-    heroName: "iron branch",
-    imageURL: "./assets/img/iron branch_1.png",
-},
-{
-    heroName: "juggernaut",
-    imageURL: "./assets/img/juggernaut_1.png",
-},
-{
-    heroName: "keeper of the light",
-    imageURL: "./assets/img/keeper of the light_1.png",
-},
-{
-    heroName: "kunkka",
-    imageURL: "./assets/img/kunkka_1.png",
-},
-{
-    heroName: "legion commander",
-    imageURL: "./assets/img/legion commander_1.png",
-},
-{
-    heroName: "leshrac",
-    imageURL: "./assets/img/leshrac_1.png",
-},
-{
-    heroName: "lich",
-    imageURL: "./assets/img/lich_1.png",
-},
-{
-    heroName: "lifestealer",
-    imageURL: "./assets/img/lifestealer_1.png",
-},
-{
-    heroName: "lina",
-    imageURL: "./assets/img/lina_1.png",
-},
-{
-    heroName: "lion",
-    imageURL: "./assets/img/lion_1.png",
-},
-{
-    heroName: "lone druid",
-    imageURL: "./assets/img/lone druid_1.png",
-},
-{
-    heroName: "luna",
-    imageURL: "./assets/img/luna_1.png",
-},
-{
-    heroName: "lycan",
-    imageURL: "./assets/img/lycan_1.png",
-},
-{
-    heroName: "magnus",
-    imageURL: "./assets/img/magnus_1.png",
-},
-{
-    heroName: "marci",
-    imageURL: "./assets/img/marci_1.png",
-},
-{
-    heroName: "mars",
-    imageURL: "./assets/img/mars_1.png",
-},
-{
-    heroName: "medusa",
-    imageURL: "./assets/img/medusa_1.png",
-},
-{
-    heroName: "meepo",
-    imageURL: "./assets/img/meepo_1.png",
-},
-{
-    heroName: "mirana",
-    imageURL: "./assets/img/mirana_1.png",
-},
-{
-    heroName: "monkey king",
-    imageURL: "./assets/img/monkey king_1.png",
-},
-{
-    heroName: "morphling",
-    imageURL: "./assets/img/morphling_1.png",
-},
-{
-    heroName: "naga siren",
-    imageURL: "./assets/img/naga siren_1.png",
-},
-{
-    heroName: "nature's prophet",
-    imageURL: "./assets/img/nature’s prophet_1.png",
-},
-{
-    heroName: "necrophos",
-    imageURL: "./assets/img/necrophos_1.png",
-},
-{
-    heroName: "night stalker",
-    imageURL: "./assets/img/night stalker_1.png",
-},
-{
-    heroName: "nyx assassin",
-    imageURL: "./assets/img/nyx assassin_1.png",
-},
-{
-    heroName: "ogre magi",
-    imageURL: "./assets/img/ogre magi_1.png",
-},
-{
-    heroName: "oracle",
-    imageURL: "./assets/img/oracle_1.png",
-},
-{
-    heroName: "outworld destroyer",
-    imageURL: "./assets/img/outworld destroyer_1.png",
-},
-{
-    heroName: "pangolier",
-    imageURL: "./assets/img/pangolier_1.png",
-},
-{
-    heroName: "phantom assassin",
-    imageURL: "./assets/img/phantom assassin_1.png",
-},
-{
-    heroName: "phantom lancer",
-    imageURL: "./assets/img/phantom lancer_1.png",
-},
-{
-    heroName: "puck",
-    imageURL: "./assets/img/puck_1.png",
-},
-{
-    heroName: "pugna",
-    imageURL: "./assets/img/pugna_1.png",
-},
-{
-    heroName: "riki",
-    imageURL: "./assets/img/riki_1.png",
-},
-{
-    heroName: "rubick",
-    imageURL: "./assets/img/rubick_1.png",
-},
-{
-    heroName: "sand king",
-    imageURL: "./assets/img/sand king_1.png",
-},
-{
-    heroName: "shadow demon",
-    imageURL: "./assets/img/shadow demon_1.png",
-},
-{
-    heroName: "shadow fiend",
-    imageURL: "./assets/img/shadow fiend_1.png",
-},
-{
-    heroName: "shaman",
-    imageURL: "./assets/img/shaman_1.png",
-},
-{
-    heroName: "silencer",
-    imageURL: "./assets/img/silencer_1.png",
-},
-{
-    heroName: "slardar",
-    imageURL: "./assets/img/slardar_1.png",
-},
-{
-    heroName: "slark",
-    imageURL: "./assets/img/slark_1.png",
-},
-{
-    heroName: "sniper",
-    imageURL: "./assets/img/sniper_1.png",
-},
-{
-    heroName: "spectre",
-    imageURL: "./assets/img/spectre_1.png",
-},
-{
-    heroName: "spirit breaker",
-    imageURL: "./assets/img/spirit breker_1.png",
-},
-{
-    heroName: "storm spirit",
-    imageURL: "./assets/img/storm spirit_1.png",
-},
-{
-    heroName: "sven",
-    imageURL: "./assets/img/sven_1.png",
-},
-{
-    heroName: "tinker",
-    imageURL: "./assets/img/tinker_1.png",
-},
-{
-    heroName: "tiny",
-    imageURL: "./assets/img/tiny_1.png",
-},
-{
-    heroName: "treant protector",
-    imageURL: "./assets/img/treant protector_1.png",
-},
-{
-    heroName: "troll warlord",
-    imageURL: "./assets/img/troll warlord_1.png",
-},
-{
-    heroName: "tidehunter",
-    imageURL: "./assets/img/tidehunter_1.png",
-},
-{
-    heroName: "timbersaw",
-    imageURL: "./assets/img/timbersaw_1.png",
-},
-{
-    heroName: "underlord",
-    imageURL: "./assets/img/underlord_1.png",
-},
-{
-    heroName: "undying",
-    imageURL: "./assets/img/undying_1.png",
-},
-{
-    heroName: "ursa",
-    imageURL: "./assets/img/ursa_1.png",
-},
-{
-    heroName: "vengeful spirit",
-    imageURL: "./assets/img/vengeful spirit_1.png",
-},
-{
-    heroName: "venomancer",
-    imageURL: "./assets/img/venomancer_1.png",
-},
-{
-    heroName: "viper",
-    imageURL: "./assets/img/viper_1.png",
-},
-{
-    heroName: "warlock",
-    imageURL: "./assets/img/warlock_1.png",
-},
-{
-    heroName: "weaver",
-    imageURL: "./assets/img/weaver_1.png",
-},
-{
-    heroName: "windranger",
-    imageURL: "./assets/img/windranger_1.png",
-},
-{
-    heroName: "winter wyvern",
-    imageURL: "./assets/img/winter wyvern_1.png",
-},
-{
-    heroName: "wraith king",
-    imageURL: "./assets/img/wraith king_1.png",
-},
-{
-    heroName: "zeus",
-    imageURL: "./assets/img/zeus_1.png",
-},
-{
-    heroName: "visage",
-    imageURL: "./assets/img/visage_1.png",
-},
-{
-    heroName: "hoodwink",
-    imageURL: "./assets/img/hoodwink_1.png",
-},
-{
-    heroName: "snapfire",
-    imageURL: "./assets/img/snapfire_1.png",
-},
-{
-    heroName: "dawnbreaker",
-    imageURL: "./assets/img/dawnbreaker_1.png",
-},
-{
-    heroName: "witch doctor",
-    imageURL: "./assets/img/witch doctor_1.png",
-},
-{
-    heroName: "void spirit",
-    imageURL: "./assets/img/void spirit_1.png",
-},
+    { heroName: "abaddon", imageURL: "./assets/img/abaddon_1.png" },
+    { heroName: "alchemist", imageURL: "./assets/img/alchemist_1.png" },
+    { heroName: "alchemist", imageURL: "./assets/img/alchemist_2.png" },
+    // Add more heroes here as needed
 ];
 
+// Function to clear selected heroes
 function limparHeroisSelecionados() {
-  selectedHeroes = []; // Limpa o array de heróis selecionados
-  $(".hero-item.selecionado").removeClass("selected"); // Remove a classe 'selecionado' dos elementos visuais
-  getHeroes();
+    selectedHeroes = [];
+    $(".hero-item.selecionado").removeClass("selected");
+    showSelectedHeroesImages();  // Refresh the displayed images
 }
 
+// Function to toggle visibility of selected heroes
 function toggleSelectedHeroes() {
-  $(".hero-item:not(.selecionado)").toggle();
-
-  showSelectedHeroesImages();
-
-  if (selectedHeroes.length > 1) {
-    $(".images").addClass("images50");
-  }
-}
-
-function hideHeroesSelected(link) {
-  if (link.hasClass("selected")) {
-    link.hide();
+    $(".hero-item:not(.selecionado)").toggle();  // Show or hide unselected heroes
     showSelectedHeroesImages();
-  }
 }
 
+// Function to update the images of selected heroes
 function showSelectedHeroesImages() {
-  $("#selectedHeroesImages").empty(); // Kosongkan div gambar hero yang terpilih
+    $("#selectedHeroesImages").empty();  // Clear the previous images
 
-  selectedHeroes.forEach(function (heroName) {
-    // Menemukan semua gambar hero yang dipilih
-    var heroImages = heroesImages.filter(function (hero) {
-      return hero.heroName === heroName;
-    });
+    selectedHeroes.forEach(function(heroName) {
+        var heroImage = heroesImages.filter(function(hero) {
+            return hero.heroName === heroName;
+        });
 
-    // Loop untuk setiap gambar hero yang ditemukan
-    heroImages.forEach(function (hero) {
-      var imgElement = $("<img>", {
-        src: hero.imageURL,
-        alt: hero.heroName,
-        class: "selected-hero-image rounded images img-fluid",
-      });
-      $("#selectedHeroesImages").append(imgElement); // Menambahkan gambar ke dalam kontainer
+        heroImage.forEach(function(hero) {
+            addSelectedHeroImage(hero.imageURL);  // Add each selected hero's image
+        });
     });
-  });
 }
 
-function verifyselectedheroes() {
-  if (selectedHeroes.length === 0) {
-    $("#ocultar").prop("disabled", true);
-    $(".hero-item:not(.selecionado)").toggle();
-    $("#clearSelections").hide();
-  } else {
-    $("#ocultar").prop("disabled", false);
-  }
+// Function to add an image of a selected hero to the page
+function addSelectedHeroImage(imageSrc) {
+    const selectedHeroesImagesDiv = document.getElementById("selectedHeroesImages");
+    
+    const imgElement = document.createElement("img");
+    imgElement.src = imageSrc;
+    imgElement.alt = "Selected Hero";
+    imgElement.classList.add("rounded", "images", "img-fluid");
+    imgElement.style.width = "100px";  // Adjust the size if needed
+    imgElement.style.margin = "5px";
+    
+    selectedHeroesImagesDiv.appendChild(imgElement);  // Append the image to the div
 }
 
+// Function to handle hero selection
+function selectHero(heroName, link) {
+    var index = selectedHeroes.indexOf(heroName);
+    if (index !== -1) {
+        selectedHeroes.splice(index, 1);  // Remove the hero from selected list
+        link.removeClass("selected");
+    } else {
+        selectedHeroes.push(heroName);  // Add the hero to selected list
+        link.addClass("selected");
+        showSelectedHeroesImages();  // Update the images when selection changes
+    }
+}
+
+// Function to load heroes and display them
 function getHeroes() {
-  $.ajax({
-    url: url,
-    type: "GET",
-    success: function (data) {
-      var links = [];
+    $.ajax({
+        url: "https://api.opendota.com/api/heroes",
+        type: "GET",
+        success: function(data) {
+            var links = [];
+            data.forEach(function(hero) {
+                var link = $("<div>", {
+                    id: hero.id,
+                    class: "hero-item",
+                    hero_name: hero.localized_name.toLowerCase(),
+                });
 
-      data.forEach(function (hero) {
-        var link = $("<div>", {
-          id: hero.id,
-          class: "hero-item",
-          hero_name: hero.localized_name.toLowerCase(),
-        });
+                var divWrapper = $("<figure>", { class: "hero-wrapper" });
+                let hero_regex = hero.localized_name.replace(" ", "_").toLowerCase();
 
-        var divWrapper = $("<figure>", {
-          class: "hero-wrapper",
-        });
+                var imgHero = $("<img>", {
+                    src: `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_regex}.png`,
+                    alt: hero.localized_name,
+                    class: "hero-image",
+                });
 
-        let hero_regex = hero.localized_name.replace(" ", "_").toLowerCase();
+                var nameHeroBaixo = $("<figcaption class='text-white'>" + hero.localized_name + "</figcaption>");
 
-        var imgHero = $("<img>", {
-          src: `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_regex}.png`,
-          alt: hero.localized_name,
-          class: "hero-image",
-        });
+                link.click(function () {
+                    selectHero(hero.localized_name.toLowerCase(), link);
+                });
 
-        var nameHeroBaixo = $(`
-          <figcaption class="text-white">${hero.localized_name} </figcaption>
-        `);
+                divWrapper.append(imgHero);
+                divWrapper.append(nameHeroBaixo);
+                link.append(divWrapper);
 
-        link.click(function () {
-          var nameHero = hero.localized_name.toLowerCase();
+                links.push(link);
+            });
 
-          var index = selectedHeroes.indexOf(nameHero);
-          if (index !== -1) {
-            selectedHeroes.splice(index, 1); // Menghapus hero jika sudah dipilih
-            link.removeClass("selected");
-          } else {
-            selectedHeroes.push(nameHero); // Menambahkan hero yang dipilih
-            link.addClass("selected");
-            $("#ocultar").removeAttr("disabled");
-            $("#clearSelections").show();
-          }
+            links.sort(function (a, b) {
+                return a.text().localeCompare(b.text());
+            });
 
-          verifyselectedheroes(); // Memperbarui status tombol clear dan ocultar
-        });
-
-        divWrapper.append(imgHero);
-        divWrapper.append(nameHeroBaixo);
-        link.append(divWrapper);
-
-        links.push(link); // Menyimpan link hero
-
-      });
-
-      links.sort(function (a, b) {
-        return a.text().localeCompare(b.text()); // Mengurutkan nama hero
-      });
-
-      $("#container").empty(); // Menghapus hero yang ada
-      links.forEach(function (link) {
-        $("#container").append(link); // Menambahkan hero ke dalam kontainer
-      });
-    },
-    error: function (xhr, status, error) {
-      console.error("Erro na requisição:", error);
-    },
-  });
+            $("#container").empty();
+            links.forEach(function (link) {
+                $("#container").append(link);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error("Error in the request:", error);
+        }
+    });
 }
 
-$(document).ready(function () {
-  $("#searchInput").on("input", function () {
-    var searchText = $(this).val().toLowerCase();
-    $(".hero-item").each(function () {
-      var heroName = $(this).attr("hero_name").toLowerCase();
-
-      if (heroName.includes(searchText)) {
-        $(this).show();
-      } else {
-        $(this).hide();
-      }
+// Run the function when document is ready
+$(document).ready(function() {
+    $("#searchInput").on("input", function() {
+        var searchText = $(this).val().toLowerCase();
+        $(".hero-item").each(function() {
+            var heroName = $(this).attr("hero_name").toLowerCase();
+            $(this).toggle(heroName.includes(searchText));  // Filter heroes by search text
+        });
     });
-  });
 
-  $("#searchInput").trigger("input");
+    $("#searchInput").trigger("input");  // Trigger search input to filter on load
 
-  var selectedImagesHtml = "";
-  $("#clearSelections").hide();
-
-  $("#selected-images").html(selectedImagesHtml);
+    getHeroes();  // Fetch and display heroes on page load
 });
