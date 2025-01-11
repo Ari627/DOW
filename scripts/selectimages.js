@@ -11,6 +11,10 @@ var heroesImages = [
     heroName: "alchemist",
     imageURL: "./assets/img/alchemist_1.png",
 },
+    {
+    heroName: "alchemist",
+    imageURL: "./assets/img/alchemist_2.png",
+},
 {
     heroName: "ancient apparition",
     imageURL: "./assets/img/ancient apparition_1.png",
