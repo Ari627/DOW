@@ -164,6 +164,10 @@ var heroesImages = [
     imageURL: "./assets/img/silencer_1.png",
   },
   {
+    heroName: "shadow_fiend",
+    imageURL: "./assets/img/shadow_fiend_1.png",
+  },
+  {
     heroName: "skywrath mage",
     imageURL: "./assets/img/skywrath mage_1.png",
   },
