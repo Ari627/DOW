@@ -23,6 +23,10 @@ var heroesImages = [
     heroName: "centaur warrunner",
     imageURL: "./assets/img/centaur warrunner_1.png",
   },
+{
+    heroName: "chaos knight",
+    imageURL: "./assets/img/chaos knight_1.png",
+  },
   {
     heroName: "crystal maiden",
     imageURL: "./assets/img/crystal maiden_1.png",
@@ -34,6 +38,10 @@ var heroesImages = [
   {
     heroName: "dawnbreaker",
     imageURL: "./assets/img/dawnbreaker_1.png",
+  },
+  {
+    heroName: "dazzle",
+    imageURL: "./assets/img/dazzle_1.png",
   },
   {
     heroName: "death prophet",
@@ -216,8 +224,20 @@ var heroesImages = [
     imageURL: "./assets/img/tiny_1.png",
   },
   {
+    heroName: "troll warlord",
+    imageURL: "./assets/img/troll_warlord_1.png",
+  },
+  {
     heroName: "tusk",
     imageURL: "./assets/img/tusk_1.png",
+  },
+  {
+    heroName: "undying",
+    imageURL: "./assets/img/undying_1.png",
+  },
+  {
+    heroName: "ursa",
+    imageURL: "./assets/img/ursa_1.png",
   },
   {
     heroName: "weaver",
@@ -230,30 +250,6 @@ var heroesImages = [
   {
     heroName: "zeus",
     imageURL: "./assets/img/zeus_1.png",
-  },
-  {
-    heroName: "troll warlord",
-    imageURL: "./assets/img/troll_warlord_1.png",
-  },
-  {
-    heroName: "undying",
-    imageURL: "./assets/img/undying_1.png",
-  },
-  {
-    heroName: "chaos knight",
-    imageURL: "./assets/img/chaos knight_1.png",
-  },
-  {
-    heroName: "mars",
-    imageURL: "./assets/img/mars_1.png",
-  },
-  {
-    heroName: "dazzle",
-    imageURL: "./assets/img/dazzle_1.png",
-  },
-  {
-    heroName: "ursa",
-    imageURL: "./assets/img/ursa_1.png",
   },
 ];
 
@@ -382,8 +378,6 @@ function getHeroes() {
           hero_regex = "rattletrap";
         } else if (hero_regex == "centaur_warrunner") {
           hero_regex = "centaur";
-        } else if (hero_regex == "underlord") {
-          hero_regex = "abyssal_underlord";
         }
         var imgHero = $("<img>", {
           src: `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_regex}.png`, // Substitua pela URL da imagem correspondente ao herói
