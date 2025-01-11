@@ -10,7 +10,6 @@ var heroesImages = [
   {
     heroName: "alchemist",
     imageURL: "./assets/img/alchemist _1.png"
-    imageURL: "./assets/img/alchemist _2.png",
   },
 {
     heroName: "antimage",
@@ -35,7 +34,6 @@ var heroesImages = [
   {
     heroName: "centaur warrunner",
     imageURL: "./assets/img/centaur warrunner_1.png"
-    imageURL: "./assets/img/centaur warrunner_2.png",
   },
   {
     heroName: "broodmother",
@@ -88,7 +86,6 @@ var heroesImages = [
   {
     heroName: "ember spirit",
     imageURL: "./assets/img/ember spirit_1.png",
-    imageURL: "./assets/img/ember spirit_2.png",
   },
   {
     heroName: "enchantress",
@@ -209,7 +206,6 @@ var heroesImages = [
   {
     heroName: "pudge",
     imageURL: "./assets/img/pudge_1.png",
-    imageURL: "./assets/img/pudge_2.png",
   },
   {
     heroName: "pugna",
@@ -234,7 +230,6 @@ var heroesImages = [
   {
     heroName: "shadow fiend",
     imageURL: "./assets/img/shadow fiend_1.png",
-    imageURL: "./assets/img/shadow fiend_2.png",
   },
   {
     heroName: "silencer",
@@ -263,7 +258,6 @@ var heroesImages = [
   {
     heroName: "spectre",
     imageURL: "./assets/img/spectre_1.png",
-    imageURL: "./assets/img/spectre_2.png",
   },
   {
     heroName: "spirit breaker",
