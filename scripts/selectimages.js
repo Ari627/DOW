@@ -3,7 +3,7 @@ var showSelected = false;
 let url = "https://api.opendota.com/api/heroes"; // url da api
 
 var heroesImages = [
-{
+  {
     heroName: "abaddon",
     imageURL: "./assets/img/abaddon_1.png",
 },
@@ -11,7 +11,7 @@ var heroesImages = [
     heroName: "alchemist",
     imageURL: "./assets/img/alchemist_1.png",
 },
-    {
+{
     heroName: "alchemist",
     imageURL: "./assets/img/alchemist_2.png",
 },
@@ -443,81 +443,67 @@ var heroesImages = [
     heroName: "void spirit",
     imageURL: "./assets/img/void spirit_1.png",
 },
+  // ... (add more heroes as needed)
 ];
 
 function limparHeroisSelecionados() {
   selectedHeroes = []; // Limpa o array de heróis selecionados
   $(".hero-item.selecionado").removeClass("selected"); // Remove a classe 'selecionado' dos elementos visuais
-  // $('#selectedHeroesImages').empty(); // Limpa as imagens dos heróis selecionados
   getHeroes();
-  // toggleSelectedHeroes(); //volta pra tela base
 }
 
-//função para selecionar heroi e chamas as imagens
 function toggleSelectedHeroes() {
   $(".hero-item:not(.selecionado)").toggle();
 
   showSelectedHeroesImages();
 
   if (selectedHeroes.length > 1) {
-    // $(".images").css("width", "50% !important");
     $(".images").addClass("images50");
   }
 }
 
-// Função para ocultar um herói selecionado ao clicar nele
 function hideHeroesSelected(link) {
-  // Verificar se o link corresponde a um herói selecionado
   if (link.hasClass("selected")) {
     link.hide();
-    // Atualizar a exibição das imagens dos heróis selecionados
     showSelectedHeroesImages();
   }
 }
 
 function showSelectedHeroesImages() {
-  // Limpar as imagens exibidas anteriormente
   $("#selectedHeroesImages").empty();
 
-  // Iterar pelos nomes dos heróis selecionados e exibir suas imagens relacionadas
   selectedHeroes.forEach(function (heroName) {
-    // Procurar o herói no array de imagens
-    var heroImage = heroesImages.find(function (hero) {
+    var heroImage = heroesImages.filter(function (hero) {
       return hero.heroName === heroName;
     });
 
-    if (heroImage) {
+    heroImage.forEach(function (hero) {
       var imgElement = $("<img>", {
-        src: heroImage.imageURL,
-        alt: heroName,
+        src: hero.imageURL,
+        alt: hero.heroName,
         class: "selected-hero-image rounded images img-fluid",
       });
       $("#selectedHeroesImages").append(imgElement);
-    }
+    });
   });
 }
 
 function verifyselectedheroes() {
-  // Verificar se o array de heróis selecionados está vazio
   if (selectedHeroes.length === 0) {
-    // Se estiver vazio, desabilite o botão de ocultar
     $("#ocultar").prop("disabled", true);
     $(".hero-item:not(.selecionado)").toggle();
     $("#clearSelections").hide();
   } else {
-    // Caso contrário, habilite o botão de ocultar
     $("#ocultar").prop("disabled", false);
   }
 }
 
-//get api heroes
 function getHeroes() {
   $.ajax({
     url: url,
     type: "GET",
     success: function (data) {
       var links = [];
-      // console.log(data)
 
       data.forEach(function (hero) {
         var link = $("<div>", {
@@ -532,47 +518,8 @@ function getHeroes() {
 
         let hero_regex = hero.localized_name.replace(" ", "_").toLowerCase();
 
-        if (hero_regex == "anti-mage") {
-          hero_regex = "antimage";
-        } else if (hero_regex == "windranger") {
-          hero_regex = "windrunner";
-        } else if (hero_regex == "lifestealer") {
-          hero_regex = "life_stealer";
-        } else if (hero_regex == "io") {
-          hero_regex = "wisp";
-        } else if (hero_regex == "vengeful_spirit") {
-          hero_regex = "vengefulspirit";
-        } else if (hero_regex == "keeper_of the light") {
-          hero_regex = "keeper_of_the_light";
-        } else if (hero_regex == "timbersaw") {
-          hero_regex = "shredder";
-        } else if (hero_regex == "wraith_king") {
-          hero_regex = "skeleton_king";
-        } else if (hero_regex == "necrophos") {
-          hero_regex = "necrolyte";
-        } else if (hero_regex == "zeus") {
-          hero_regex = "zuus";
-        } else if (hero_regex == "doom") {
-          hero_regex = "doom_bringer";
-        } else if (hero_regex == "nature's_prophet") {
-          hero_regex = "furion";
-        } else if (hero_regex == "shadow_fiend") {
-          hero_regex = "nevermore";
-        } else if (hero_regex == "magnus") {
-          hero_regex = "magnataur";
-        } else if (hero_regex == "queen_of pain") {
-          hero_regex = "queenofpain";
-        } else if (hero_regex == "treant_protector") {
-          hero_regex = "treant";
-        } else if (hero_regex == "outworld_destroyer") {
-          hero_regex = "obsidian_destroyer";
-        } else if (hero_regex == "clockwerk") {
-          hero_regex = "rattletrap";
-        } else if (hero_regex == "centaur_warrunner") {
-          hero_regex = "centaur";
-        }
         var imgHero = $("<img>", {
-          src: `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_regex}.png`, // Substitua pela URL da imagem correspondente ao herói
+          src: `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_regex}.png`,
           alt: hero.localized_name,
           class: "hero-image",
         });
@@ -581,27 +528,19 @@ function getHeroes() {
           `<figcaption class="text-white">${hero.localized_name} </figcaption>`
         );
 
-        // Adicionar evento de clique para tratar a seleção
         link.click(function () {
           var nameHero = hero.localized_name.toLowerCase();
 
-          // Verificar se o herói já está na lista de heróis selecionados
           var index = selectedHeroes.indexOf(nameHero);
           if (index !== -1) {
             selectedHeroes.splice(index, 1);
             link.removeClass("selected");
-            // $(link).css("display", 'none');
-            //  hideHeroesSelected(link);
-            // verificarEstadoHeroisSelecionados();
           } else {
             selectedHeroes.push(nameHero);
             link.addClass("selected");
             $("#ocultar").removeAttr("disabled");
             $("#clearSelections").show();
           }
-
-          // Imprimir os heróis selecionados
-          //console.log("Heróis selecionados:", selectedHeroes);
         });
 
         divWrapper.append(imgHero);
@@ -611,15 +550,11 @@ function getHeroes() {
         links.push(link);
       });
 
-      // Ordenar os elementos <a> em ordem alfabética com base no texto
       links.sort(function (a, b) {
         return a.text().localeCompare(b.text());
       });
 
-      // Limpar o contêiner antes de adicionar os elementos ordenados
       $("#container").empty();
-
-      // Adicionar os elementos <a> ordenados ao contêiner
       links.forEach(function (link) {
         $("#container").append(link);
       });
@@ -629,124 +564,6 @@ function getHeroes() {
     },
   });
 }
-$.ajax({
-  url: url,
-  type: "GET",
-  success: function (data) {
-    var links = [];
-    // console.log(data)
-
-    data.forEach(function (hero) {
-      var link = $("<div>", {
-        id: hero.id,
-        class: "hero-item",
-        hero_name: hero.localized_name.toLowerCase(),
-      });
-
-      var divWrapper = $("<figure>", {
-        class: "hero-wrapper",
-      });
-
-      let hero_regex = hero.localized_name.replace(" ", "_").toLowerCase();
-
-      if (hero_regex == "anti-mage") {
-        hero_regex = "antimage";
-      } else if (hero_regex == "windranger") {
-        hero_regex = "windrunner";
-      } else if (hero_regex == "lifestealer") {
-        hero_regex = "life_stealer";
-      } else if (hero_regex == "io") {
-        hero_regex = "wisp";
-      } else if (hero_regex == "vengeful_spirit") {
-        hero_regex = "vengefulspirit";
-      } else if (hero_regex == "keeper_of the light") {
-        hero_regex = "keeper_of_the_light";
-      } else if (hero_regex == "timbersaw") {
-        hero_regex = "shredder";
-      } else if (hero_regex == "wraith_king") {
-        hero_regex = "skeleton_king";
-      } else if (hero_regex == "necrophos") {
-        hero_regex = "necrolyte";
-      } else if (hero_regex == "zeus") {
-        hero_regex = "zuus";
-      } else if (hero_regex == "doom") {
-        hero_regex = "doom_bringer";
-      } else if (hero_regex == "nature's_prophet") {
-        hero_regex = "furion";
-      } else if (hero_regex == "shadow_fiend") {
-        hero_regex = "nevermore";
-      } else if (hero_regex == "magnus") {
-        hero_regex = "magnataur";
-      } else if (hero_regex == "queen_of pain") {
-        hero_regex = "queenofpain";
-      } else if (hero_regex == "treant_protector") {
-        hero_regex = "treant";
-      } else if (hero_regex == "outworld_destroyer") {
-        hero_regex = "obsidian_destroyer";
-      } else if (hero_regex == "clockwerk") {
-        hero_regex = "rattletrap";
-      } else if (hero_regex == "centaur_warrunner") {
-        hero_regex = "centaur";
-      } else if (hero_regex == "underlord") {
-        hero_regex = "abyssal_underlord";
-      }
-      var imgHero = $("<img>", {
-        src: `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_regex}.png`, // Substitua pela URL da imagem correspondente ao herói
-        alt: hero.localized_name,
-        class: "hero-image",
-      });
-
-      var nameHeroBaixo = $(
-        `<figcaption class="text-white">${hero.localized_name} </figcaption>`
-      );
-
-      // Adicionar evento de clique para tratar a seleção
-      link.click(function () {
-        var nameHero = hero.localized_name.toLowerCase();
-
-        // Verificar se o herói já está na lista de heróis selecionados
-        var index = selectedHeroes.indexOf(nameHero);
-        if (index !== -1) {
-          selectedHeroes.splice(index, 1);
-          link.removeClass("selected");
-          // $(link).css("display", 'none');
-          //  hideHeroesSelected(link);
-          // verificarEstadoHeroisSelecionados();
-        } else {
-          selectedHeroes.push(nameHero);
-          link.addClass("selected");
-          $("#ocultar").removeAttr("disabled");
-          $("#clearSelections").show();
-        }
-
-        // Imprimir os heróis selecionados
-        // console.log('Heróis selecionados:', selectedHeroes);
-      });
-
-      divWrapper.append(imgHero);
-      divWrapper.append(nameHeroBaixo);
-      link.append(divWrapper);
-
-      links.push(link);
-    });
-
-    // Ordenar os elementos <a> em ordem alfabética com base no texto
-    links.sort(function (a, b) {
-      return a.text().localeCompare(b.text());
-    });
-
-    // Limpar o contêiner antes de adicionar os elementos ordenados
-    $("#container").empty();
-
-    // Adicionar os elementos <a> ordenados ao contêiner
-    links.forEach(function (link) {
-      $("#container").append(link);
-    });
-  },
-  error: function (xhr, status, error) {
-    console.error("error: ", error);
-  },
-});
 
 $(document).ready(function () {
   $("#searchInput").on("input", function () {
@@ -765,7 +582,6 @@ $(document).ready(function () {
   $("#searchInput").trigger("input");
 
   var selectedImagesHtml = "";
-  // Adicionar evento de clique para ocultar um herói selecionado quando todos estão visíveis
   $("#clearSelections").hide();
 
   $("#selected-images").html(selectedImagesHtml);
