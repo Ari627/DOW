@@ -6,32 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dawn of War Builds</title>
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon-32x32.png">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <style>
-        /* CSS tambahan untuk menjaga gambar agar tidak bertabrakan */
-        #selected-images {
-            display: flex;
-            justify-content: center;  /* Menyusun gambar di tengah */
-            gap: 10px;  /* Memberikan jarak antara gambar */
-            flex-wrap: wrap;  /* Membungkus gambar jika ada terlalu banyak */
-        }
+    <link rel="stylesheet" href="./styles.css">
 
-        .images {
-            width: 100px;  /* Tentukan lebar gambar */
-            height: 100px; /* Tentukan tinggi gambar */
-            border-radius: 5px;  /* Memberikan border-radius pada gambar */
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm sticky-top bg-body-tertiary border-bottom border-body" style="background-color: #e3f2fd;">
             <div class="container-fluid">
-                <ul class="navbar-nav ">
-                    <li class="nav-item active">
-                        <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
-                    </li>
-                </ul>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ">
+                        <li class="nav-item active">
+                            <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+                        </li>
+                    </ul>
+                </div>
+                <form class="d-flex justify-content-end" role="button">
+                    <div class="mr-4 pt-2">
+                        <a class="nav-link me-3" href="https://t.me/DOWdota2" target="_blank"> 
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Telegram_Logo_2019.svg" alt="Telegram" class="discord" style="width: 24px; height: 24px; vertical-align: middle;">
+                        </a>
+                    </div>
+                </form>
             </div>
         </nav>
     </header>
@@ -41,21 +37,21 @@
             <h2 class="text-center text-white title">DAWN OF WAR BUILDS</h2>
 
             <div class="input-group" id="controls">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search heroes...">
-                <button class="btn btn-outline-warning" type="button" id="ocultar">Show/Hide Selections</button>
+                <input type="text" class="form-control" id="searchInput" placeholder="Search heroes..." aria-label="Search heroes..." aria-describedby="ocultar">
+                <button class="btn btn-outline-warning" onclick="toggleSelectedHeroes()" type="button" id="ocultar" disabled>Show/Hide Selections</button>
             </div>
 
             <div>
-                <p class="btn text-danger" id="clearSelections">
+                <p class="btn text-danger" onclick="limparHeroisSelecionados()" id="clearSelections">
                     <img src="./assets/cancel.png" alt="" style="width: 24px;"> Clear Selections
                 </p>
             </div>
 
             <div>
-                <!-- Daftar Hero yang dapat dipilih -->
+                <!-- Daftar Hero -->
                 <select id="example-multiselect" multiple>
-                    <option value="alchemist">Alchemist</option>
                     <option value="abaddon">Abaddon</option>
+                    <option value="alchemist">Alchemist</option>
                     <option value="ancient apparition">Ancient Apparition</option>
                     <option value="anti-mage">Anti-Mage</option>
                     <option value="arc warden">Arc Warden</option>
@@ -65,27 +61,35 @@
                     <option value="beastmaster">Beastmaster</option>
                     <option value="bounty hunter">Bounty Hunter</option>
                     <option value="brewmaster">Brewmaster</option>
-                    <!-- Tambahkan lebih banyak hero sesuai kebutuhan -->
+                    <option value="bristleback">Bristleback</option>
+                    <option value="broodmother">Broodmother</option>
+                    <option value="centaur warrunner">Centaur Warrunner</option>
+                    <option value="chaos knight">Chaos Knight</option>
+                    <option value="chen">Chen</option>
+                    <option value="clinkz">Clinkz</option>
+                    <option value="crystal maiden">Crystal Maiden</option>
+                    <!-- Daftar hero lainnya dapat ditambahkan di sini -->
                 </select>
 
                 <!-- Area untuk menampilkan gambar hero yang dipilih -->
-                <div id="selected-images" class="text-center"></div>
+                <div id="selectedHeroesImages" class="text-center"></div>
             </div>
+
         </div>
     </main>
 
     <footer>
         <div class="container-fluid d-flex justify-content-center py-3 footer bg-dark">
-            <p class="text-white pt-2">©2023 Copyright QuebraTech</p>
+            <p class="text-white pt-2">©2025 Copyright Newbie Gang</p>
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 
     <script>
+        // Fungsi untuk menampilkan gambar hero yang dipilih
         $(document).ready(function () {
-            // Handle when selection changes
             $("#example-multiselect").on("change", function () {
                 var selectedHeroes = $("#example-multiselect option:selected");
                 var selectedImagesHtml = "";
@@ -98,7 +102,7 @@
                         '<img class="rounded images" src="./assets/img/' + heroName + "_2.png" + '" alt="' + heroName + ' image 2"> ';
                 });
 
-                $("#selected-images").html(selectedImagesHtml);
+                $("#selectedHeroesImages").html(selectedImagesHtml);
             });
         });
     </script>
