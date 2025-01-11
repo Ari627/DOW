@@ -6,22 +6,22 @@ var heroesImages = [
   {
     heroName: "abaddon",
     imageURL: "./assets/img/abaddon_1.png",
-},
-{
+  },
+  {
     heroName: "alchemist",
     imageURL: "./assets/img/alchemist_1.png",
-},
-{
+  },
+  {
     heroName: "alchemist",
-    imageURL: "./assets/img/alchemist_2.png",
-},
+    imageURL: "./assets/img/alchemist_2.png", // Gambar kedua untuk Alchemist
+  },
 {
     heroName: "ancient apparition",
     imageURL: "./assets/img/ancient apparition_1.png",
 },
 {
     heroName: "anti-mage",
-    imageURL: "./assets/img/anti_1.png",
+    imageURL: "./assets/img/anti-mage_1.png",
 },
 {
     heroName: "arc warden",
@@ -443,7 +443,6 @@ var heroesImages = [
     heroName: "void spirit",
     imageURL: "./assets/img/void spirit_1.png",
 },
-  // ... (add more heroes as needed)
 ];
 
 function limparHeroisSelecionados() {
@@ -470,20 +469,22 @@ function hideHeroesSelected(link) {
 }
 
 function showSelectedHeroesImages() {
-  $("#selectedHeroesImages").empty();
+  $("#selectedHeroesImages").empty(); // Kosongkan div gambar hero yang terpilih
 
   selectedHeroes.forEach(function (heroName) {
-    var heroImage = heroesImages.filter(function (hero) {
+    // Menemukan semua gambar hero yang dipilih
+    var heroImages = heroesImages.filter(function (hero) {
       return hero.heroName === heroName;
     });
 
-    heroImage.forEach(function (hero) {
+    // Loop untuk setiap gambar hero yang ditemukan
+    heroImages.forEach(function (hero) {
       var imgElement = $("<img>", {
         src: hero.imageURL,
         alt: hero.heroName,
         class: "selected-hero-image rounded images img-fluid",
       });
-      $("#selectedHeroesImages").append(imgElement);
+      $("#selectedHeroesImages").append(imgElement); // Menambahkan gambar ke dalam kontainer
     });
   });
 }
@@ -524,39 +525,42 @@ function getHeroes() {
           class: "hero-image",
         });
 
-        var nameHeroBaixo = $(
-          `<figcaption class="text-white">${hero.localized_name} </figcaption>`
-        );
+        var nameHeroBaixo = $(`
+          <figcaption class="text-white">${hero.localized_name} </figcaption>
+        `);
 
         link.click(function () {
           var nameHero = hero.localized_name.toLowerCase();
 
           var index = selectedHeroes.indexOf(nameHero);
           if (index !== -1) {
-            selectedHeroes.splice(index, 1);
+            selectedHeroes.splice(index, 1); // Menghapus hero jika sudah dipilih
             link.removeClass("selected");
           } else {
-            selectedHeroes.push(nameHero);
+            selectedHeroes.push(nameHero); // Menambahkan hero yang dipilih
             link.addClass("selected");
             $("#ocultar").removeAttr("disabled");
             $("#clearSelections").show();
           }
+
+          verifyselectedheroes(); // Memperbarui status tombol clear dan ocultar
         });
 
         divWrapper.append(imgHero);
         divWrapper.append(nameHeroBaixo);
         link.append(divWrapper);
 
-        links.push(link);
+        links.push(link); // Menyimpan link hero
+
       });
 
       links.sort(function (a, b) {
-        return a.text().localeCompare(b.text());
+        return a.text().localeCompare(b.text()); // Mengurutkan nama hero
       });
 
-      $("#container").empty();
+      $("#container").empty(); // Menghapus hero yang ada
       links.forEach(function (link) {
-        $("#container").append(link);
+        $("#container").append(link); // Menambahkan hero ke dalam kontainer
       });
     },
     error: function (xhr, status, error) {
