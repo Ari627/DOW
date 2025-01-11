@@ -209,7 +209,7 @@ var heroesImages = [
   },
   {
     heroName: "pugna",
-    imageURL: "./assets/img/pugna _1.png",
+    imageURL: "./assets/img/pugna_1.png",
   },
   {
     heroName: "queen of pain",
@@ -293,7 +293,7 @@ var heroesImages = [
   },
   {
     heroName: "troll warlord",
-    imageURL: "./assets/img/troll_warlord_1.png",
+    imageURL: "./assets/img/troll warlord_1.png",
   },
   {
     heroName: "tusk",
