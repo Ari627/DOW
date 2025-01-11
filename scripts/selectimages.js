@@ -156,6 +156,10 @@ var heroesImages = [
     imageURL: "./assets/img/riki_1.png",
   },
   {
+    heroName: "rubick",
+    imageURL: "./assets/img/rubick_1.png",
+  },
+  {
     heroName: "silencer",
     imageURL: "./assets/img/silencer_1.png",
   },
