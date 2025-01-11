@@ -8,8 +8,21 @@ var heroesImages = [
     imageURL: "./assets/img/abaddon_1.png",
   },
   {
-    heroName: "abaddon",
-    imageURL: "./assets/img/abaddon_2.png",
+    heroName: "alchemist",
+    imageURL: "./assets/img/alchemist _1.png"
+    imageURL: "./assets/img/alchemist _2.png",
+  },
+{
+    heroName: "antimage",
+    imageURL: "./assets/img/antimage _1.png",
+  },
+{
+    heroName: "arc warden",
+    imageURL: "./assets/img/arc warden _1.png",
+  },
+  {
+    heroName: "bounty hunter",
+    imageURL: "./assets/img/bounty hunter_1.png",
   },
   {
     heroName: "bloodseeker",
@@ -20,16 +33,21 @@ var heroesImages = [
     imageURL: "./assets/img/bristleback_1.png",
   },
   {
-    heroName: "broodmother",
-    imageURL: "./assets/img/broodmother_1.png",
+    heroName: "centaur warrunner",
+    imageURL: "./assets/img/centaur warrunner_1.png"
+    imageURL: "./assets/img/centaur warrunner_2.png",
   },
   {
-    heroName: "centaur warrunner",
-    imageURL: "./assets/img/centaur warrunner_1.png",
+    heroName: "broodmother",
+    imageURL: "./assets/img/broodmother_1.png",
   },
 {
     heroName: "chaos knight",
     imageURL: "./assets/img/chaos knight_1.png",
+  },
+{
+    heroName: "chen",
+    imageURL: "./assets/img/chen_1.png",
   },
   {
     heroName: "crystal maiden",
@@ -46,6 +64,10 @@ var heroesImages = [
   {
     heroName: "dazzle",
     imageURL: "./assets/img/dazzle_1.png",
+  },
+  {
+    heroName: "drow ranger",
+    imageURL: "./assets/img/drow ranger_1.png",
   },
   {
     heroName: "death prophet",
@@ -66,6 +88,7 @@ var heroesImages = [
   {
     heroName: "ember spirit",
     imageURL: "./assets/img/ember spirit_1.png",
+    imageURL: "./assets/img/ember spirit_2.png",
   },
   {
     heroName: "enchantress",
@@ -76,12 +99,20 @@ var heroesImages = [
     imageURL: "./assets/img/grimstroke_1.png",
   },
   {
+    heroName: "gyrocopter",
+    imageURL: "./assets/img/gyrocopter_1.png",
+  },
+  {
     heroName: "hoodwink",
     imageURL: "./assets/img/hoodwink_1.png",
   },
   {
     heroName: "huskar",
     imageURL: "./assets/img/huskar_1.png",
+  },
+  {
+    heroName: "juggernaut",
+    imageURL: "./assets/img/juggernaut_1.png",
   },
   {
     heroName: "kunkka",
@@ -96,12 +127,24 @@ var heroesImages = [
     imageURL: "./assets/img/lion_1.png",
   },
   {
+    heroName: "luna",
+    imageURL: "./assets/img/luna_1.png",
+  },
+  {
     heroName: "lone druid",
     imageURL: "./assets/img/lone druid_1.png",
   },
   {
+    heroName: "marci",
+    imageURL: "./assets/img/marci_1.png",
+  },
+  {
     heroName: "mars",
     imageURL: "./assets/img/mars_1.png",
+  },
+  {
+    heroName: "medusa",
+    imageURL: "./assets/img/medusa_1.png",
   },
   {
     heroName: "monkey king",
@@ -118,6 +161,14 @@ var heroesImages = [
   {
     heroName: "naga siren",
     imageURL: "./assets/img/naga siren_1.png",
+  },
+  {
+    heroName: "nature's prophet",
+    imageURL: "./assets/img/nature's prophet_1.png",
+  },
+  {
+    heroName: "necrophos",
+    imageURL: "./assets/img/necrophos_1.png",
   },
   {
     heroName: "night stalker",
@@ -158,10 +209,19 @@ var heroesImages = [
   {
     heroName: "pudge",
     imageURL: "./assets/img/pudge_1.png",
+    imageURL: "./assets/img/pudge_2.png",
+  },
+  {
+    heroName: "pugna",
+    imageURL: "./assets/img/pugna _1.png",
   },
   {
     heroName: "queen of pain",
     imageURL: "./assets/img/queen of pain_1.png",
+  },
+  {
+    heroName: "razor",
+    imageURL: "./assets/img/razor_1.png",
   },
   {
     heroName: "riki",
@@ -172,12 +232,13 @@ var heroesImages = [
     imageURL: "./assets/img/rubick_1.png",
   },
   {
-    heroName: "silencer",
-    imageURL: "./assets/img/silencer_1.png",
-  },
-  {
     heroName: "shadow fiend",
     imageURL: "./assets/img/shadow fiend_1.png",
+    imageURL: "./assets/img/shadow fiend_2.png",
+  },
+  {
+    heroName: "silencer",
+    imageURL: "./assets/img/silencer_1.png",
   },
   {
     heroName: "skywrath mage",
@@ -188,12 +249,21 @@ var heroesImages = [
     imageURL: "./assets/img/slardar_1.png",
   },
   {
+    heroName: "slark",
+    imageURL: "./assets/img/slark_1.png",
+  },
+  {
     heroName: "snapfire",
     imageURL: "./assets/img/snapfire_1.png",
   },
   {
+    heroName: "sniper",
+    imageURL: "./assets/img/sniper_1.png",
+  },
+  {
     heroName: "spectre",
     imageURL: "./assets/img/spectre_1.png",
+    imageURL: "./assets/img/spectre_2.png",
   },
   {
     heroName: "spirit breaker",
@@ -242,6 +312,18 @@ var heroesImages = [
   {
     heroName: "ursa",
     imageURL: "./assets/img/ursa_1.png",
+  },
+  {
+    heroName: "viper",
+    imageURL: "./assets/img/viper_1.png",
+  },
+  {
+    heroName: "visage",
+    imageURL: "./assets/img/visage_1.png",
+  },
+  {
+    heroName: "void spirit",
+    imageURL: "./assets/img/void spirit_1.png",
   },
   {
     heroName: "weaver",
