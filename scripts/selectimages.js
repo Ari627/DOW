@@ -9,15 +9,15 @@ var heroesImages = [
   },
   {
     heroName: "alchemist",
-    imageURL: "./assets/img/alchemist _1.png"
+    imageURL: "./assets/img/alchemist_1.png"
   },
 {
     heroName: "antimage",
-    imageURL: "./assets/img/antimage _1.png",
+    imageURL: "./assets/img/antimage_1.png",
   },
 {
     heroName: "arc warden",
-    imageURL: "./assets/img/arc warden _1.png",
+    imageURL: "./assets/img/arc warden_1.png",
   },
   {
     heroName: "bounty hunter",
