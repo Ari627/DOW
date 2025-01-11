@@ -63,6 +63,10 @@ var heroesImages = [
     heroName: "centaur warrunner",
     imageURL: "./assets/img/centaur warrunner_1.png",
 },
+    {
+    heroName: "centaur warrunner",
+    imageURL: "./assets/img/centaur warrunner_2.png",
+},
 {
     heroName: "chaos knight",
     imageURL: "./assets/img/chaos knight_1.png",
@@ -122,6 +126,10 @@ var heroesImages = [
 {
     heroName: "ember spirit",
     imageURL: "./assets/img/ember spirit_1.png",
+},
+    {
+    heroName: "ember spirit",
+    imageURL: "./assets/img/ember spirit_2.png",
 },
 {
     heroName: "enchantress",
@@ -286,6 +294,14 @@ var heroesImages = [
 {
     heroName: "puck",
     imageURL: "./assets/img/puck_1.png",
+},
+    {
+    heroName: "pudge",
+    imageURL: "./assets/img/pudge_1.png",
+},
+        {
+    heroName: "pudge",
+    imageURL: "./assets/img/pudge_2.png",
 },
 {
     heroName: "pugna",
