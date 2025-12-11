@@ -4,199 +4,447 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dawn of War Builds</title>
+    <title>Dawn of War Builds - Complete Dota 2 Heroes</title>
     <link rel="icon" type="image/x-icon" href="./assets/favicon/favicon-32x32.png">
     <link rel="stylesheet" href="./styles.css">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        /* Custom CSS tambahan */
+        .images {
+            max-width: 45%;
+            height: auto;
+            border: 3px solid #4a4a4a;
+            margin: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .images:hover {
+            transform: scale(1.02);
+            border-color: #ffc107;
+        }
+        
+        .hero-container {
+            background: rgba(30, 30, 40, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .multiselect-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #2d3748;
+        }
+        
+        .multiselect-container option {
+            padding: 8px;
+            margin: 2px 0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .multiselect-container option:hover {
+            background-color: #4a5568;
+        }
+        
+        .multiselect-container option:checked {
+            background-color: #3182ce;
+            color: white;
+        }
+        
+        .title {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 20px 0;
+            padding: 10px;
+            background: linear-gradient(90deg, #1a202c, #2d3748);
+            border-radius: 10px;
+        }
+        
+        #selectedHeroesImages {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .images {
+                max-width: 100%;
+                display: block;
+                margin: 10px auto;
+            }
+            
+            .multiselect-container {
+                max-height: 300px;
+            }
+        }
+    </style>
 </head>
-<body>
+<body style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); min-height: 100vh;">
     <header>
-        <nav class="navbar navbar-expand-sm sticky-top bg-body-tertiary border-bottom border-body" style="background-color: #e3f2fd;">
+        <nav class="navbar navbar-expand-sm sticky-top" style="background: linear-gradient(90deg, #1a202c 0%, #2d3748 100%);">
             <div class="container-fluid">
+                <a class="navbar-brand text-warning fw-bold" href="#">
+                    <img src="./assets/favicon/favicon-32x32.png" alt="Logo" class="d-inline-block align-text-top me-2">
+                    Dawn of War Builds
+                </a>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav ">
-                        <li class="nav-item active">
-                            <a class="nav-link active" href="./index.html" aria-current="page">Home</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active text-white" href="./index.html" aria-current="page">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" onclick="showAllHeroes()">All Heroes</a>
                         </li>
                     </ul>
                 </div>
-                <form class="d-flex justify-content-end" role="button">
-                    <div class="mr-4 pt-2">
-                        <a class="nav-link me-3" href="https://t.me/DOWdota2" target="_blank"> 
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Telegram_Logo_2019.svg" alt="Telegram" class="discord" style="width: 24px; height: 24px; vertical-align: middle;">
-                        </a>
-                    </div>
-                </form>
+                <div class="d-flex">
+                    <a class="nav-link me-3" href="https://t.me/DOWdota2" target="_blank"> 
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Telegram_Logo_2019.svg" alt="Telegram" style="width: 28px; height: 28px; vertical-align: middle;">
+                        <span class="text-white ms-1 d-none d-sm-inline">Telegram</span>
+                    </a>
+                </div>
             </div>
         </nav>
     </header>
 
     <main role="main">
-        <div class="container container-main">
-            <h2 class="text-center text-white title">DAWN OF WAR BUILDS</h2>
-
-            <div class="input-group" id="controls">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search heroes..." aria-label="Search heroes..." aria-describedby="ocultar">
-                <button class="btn btn-outline-warning" onclick="toggleSelectedHeroes()" type="button" id="ocultar" disabled>Show/Hide Selections</button>
+        <div class="container container-main py-4">
+            <h2 class="text-center text-warning title">DAWN OF WAR BUILDS</h2>
+            <p class="text-center text-white-50 mb-4">Select Dota 2 heroes to view their recommended builds. Currently showing all 126 heroes.</p>
+            
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search heroes by name..." aria-label="Search heroes">
+                        <button class="btn btn-warning" type="button" onclick="filterHeroes()">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4 mt-2 mt-md-0">
+                    <button class="btn btn-outline-warning w-100" onclick="toggleSelectedHeroes()" type="button" id="toggleBtn" disabled>
+                        <span id="toggleText">Show Selections</span>
+                    </button>
+                </div>
             </div>
-
-            <div>
-                <p class="btn text-danger" onclick="limparHeroisSelecionados()" id="clearSelections">
-                    <img src="./assets/cancel.png" alt="" style="width: 24px;"> Clear Selections
-                </p>
+            
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <p class="btn btn-outline-danger btn-sm" onclick="clearAllSelections()">
+                        <img src="./assets/cancel.png" alt="Clear" style="width: 20px; vertical-align: middle;">
+                        Clear All Selections
+                    </p>
+                    <p class="btn btn-outline-info btn-sm ms-2" onclick="selectRandomHeroes()">
+                        <img src="./assets/dice.png" alt="Random" style="width: 20px; vertical-align: middle;">
+                        Random 3 Heroes
+                    </p>
+                </div>
+                <div class="text-white">
+                    Selected: <span id="selectedCount">0</span> heroes
+                </div>
             </div>
-
-            <div>
-                <!-- Daftar Hero -->
-<select id="example-multiselect" multiple>
-    <option value="abaddon">Abaddon</option>
-    <option value="alchemist">Alchemist</option>
-    <option value="ancient apparition">Ancient Apparition</option>
-    <option value="anti-mage">Anti-Mage</option>
-    <option value="arc warden">Arc Warden</option>
-    <option value="axe">Axe</option>
-    <option value="bane">Bane</option>
-    <option value="batrider">Batrider</option>
-    <option value="beastmaster">Beastmaster</option>
-    <option value="bounty hunter">Bounty Hunter</option>
-    <option value="brewmaster">Brewmaster</option>
-    <option value="bristleback">Bristleback</option>
-    <option value="broodmother">Broodmother</option>
-    <option value="centaur warrunner">Centaur Warrunner</option>
-    <option value="chaos knight">Chaos Knight</option>
-    <option value="chen">Chen</option>
-    <option value="clinkz">Clinkz</option>
-    <option value="crystal maiden">Crystal Maiden</option>
-    <option value="dark seer">Dark Seer</option>
-    <option value="dark willow">Dark Willow</option>
-    <option value="dawnbreaker">Dawnbreaker</option>
-    <option value="dazzle">Dazzle</option>
-    <option value="death prophet">Death Prophet</option>
-    <option value="disruptor">Disruptor</option>
-    <option value="doom">Doom</option>
-    <option value="dragon knight">Dragon Knight</option>
-    <option value="drow ranger">Drow Ranger</option>
-    <option value="earth spirit">Earth Spirit</option>
-    <option value="earthshaker">Earthshaker</option>
-    <option value="elder titan">Elder Titan</option>
-    <option value="ember spirit">Ember Spirit</option>
-    <option value="enchantress">Enchantress</option>
-    <option value="enigma">Enigma</option>
-    <option value="faceless void">Faceless Void</option>
-    <option value="grimstroke">Grimstroke</option>
-    <option value="gyrocopter">Gyrocopter</option>
-    <option value="huskar">Huskar</option>
-    <option value="invoker">Invoker</option>
-    <option value="io">Io</option>
-    <option value="iron branch">Iron Branch</option>
-    <option value="juggernaut">Juggernaut</option>
-    <option value="keeper of the light">Keeper of the Light</option>
-    <option value="kunkka">Kunkka</option>
-    <option value="legion commander">Legion Commander</option>
-    <option value="leshrac">Leshrac</option>
-    <option value="lich">Lich</option>
-    <option value="lifestealer">Lifestealer</option>
-    <option value="lina">Lina</option>
-    <option value="lion">Lion</option>
-    <option value="lone druid">Lone Druid</option>
-    <option value="luna">Luna</option>
-    <option value="lycan">Lycan</option>
-    <option value="magnus">Magnus</option>
-    <option value="marci">Marci</option>
-    <option value="mars">Mars</option>
-    <option value="medusa">Medusa</option>
-    <option value="meepo">Meepo</option>
-    <option value="mirana">Mirana</option>
-    <option value="monkey king">Monkey King</option>
-    <option value="morphling">Morphling</option>
-    <option value="naga siren">Naga Siren</option>
-    <option value="nature's prophet">Nature's Prophet</option>
-    <option value="necrophos">Necrophos</option>
-    <option value="night stalker">Night Stalker</option>
-    <option value="nyx assassin">Nyx Assassin</option>
-    <option value="ogre magi">Ogre Magi</option>
-    <option value="oracle">Oracle</option>
-    <option value="outworld destroyer">Outworld Destroyer</option>
-    <option value="pangolier">Pangolier</option>
-    <option value="phantom assassin">Phantom Assassin</option>
-    <option value="phantom lancer">Phantom Lancer</option>
-    <option value="puck">Puck</option>
-    <option value="pugna">Pugna</option>
-    <option value="pudge">Pudge</option>
-    <option value="riki">Riki</option>
-    <option value="rubick">Rubick</option>
-    <option value="sand king">Sand King</option>
-    <option value="shadow demon">Shadow Demon</option>
-    <option value="shadow fiend">Shadow Fiend</option>
-    <option value="shaman">Shaman</option>
-    <option value="silencer">Silencer</option>
-    <option value="slardar">Slardar</option>
-    <option value="slark">Slark</option>
-    <option value="sniper">Sniper</option>
-    <option value="spectre">Spectre</option>
-    <option value="spirit breaker">Spirit Breaker</option>
-    <option value="storm spirit">Storm Spirit</option>
-    <option value="sven">Sven</option>
-    <option value="tinker">Tinker</option>
-    <option value="tiny">Tiny</option>
-    <option value="treant protector">Treant Protector</option>
-    <option value="troll warlord">Troll Warlord</option>
-    <option value="tidehunter">Tidehunter</option>
-    <option value="timbersaw">Timbersaw</option>
-    <option value="underlord">Underlord</option>
-    <option value="undying">Undying</option>
-    <option value="ursa">Ursa</option>
-    <option value="vengeful spirit">Vengeful Spirit</option>
-    <option value="venomancer">Venomancer</option>
-    <option value="viper">Viper</option>
-    <option value="warlock">Warlock</option>
-    <option value="weaver">Weaver</option>
-    <option value="windranger">Windranger</option>
-    <option value="winter wyvern">Winter Wyvern</option>
-    <option value="wraith king">Wraith King</option>
-    <option value="zeus">Zeus</option>
-    <option value="visage">Visage</option>
-    <option value="hoodwink">Hoodwink</option>
-    <option value="snapfire">Snapfire</option>
-    <option value="witch doctor">Witch Doctor</option>
-    <option value="void spirit">Void Spirit</option>
-</select>
-
-                <!-- Area untuk menampilkan gambar hero yang dipilih -->
-                <div id="selectedHeroesImages" class="text-center"></div>
+            
+            <div class="mb-4">
+                <label for="heroMultiSelect" class="form-label text-white">Select Heroes (Hold Ctrl/Cmd to select multiple):</label>
+                <div class="multiselect-container">
+                    <!-- Daftar 126 Hero Dota 2 Lengkap -->
+                    <select id="heroMultiSelect" multiple class="form-select" size="15">
+                        <option value="abaddon">Abaddon</option>
+                        <option value="alchemist">Alchemist</option>
+                        <option value="ancient-apparition">Ancient Apparition</option>
+                        <option value="anti-mage">Anti-Mage</option>
+                        <option value="arc-warden">Arc Warden</option>
+                        <option value="axe">Axe</option>
+                        <option value="bane">Bane</option>
+                        <option value="batrider">Batrider</option>
+                        <option value="beastmaster">Beastmaster</option>
+                        <option value="bloodseeker">Bloodseeker</option>
+                        <option value="bounty-hunter">Bounty Hunter</option>
+                        <option value="brewmaster">Brewmaster</option>
+                        <option value="bristleback">Bristleback</option>
+                        <option value="broodmother">Broodmother</option>
+                        <option value="centaur-warrunner">Centaur Warrunner</option>
+                        <option value="chaos-knight">Chaos Knight</option>
+                        <option value="chen">Chen</option>
+                        <option value="clinkz">Clinkz</option>
+                        <option value="clockwerk">Clockwerk</option>
+                        <option value="crystal-maiden">Crystal Maiden</option>
+                        <option value="dark-seer">Dark Seer</option>
+                        <option value="dark-willow">Dark Willow</option>
+                        <option value="dawnbreaker">Dawnbreaker</option>
+                        <option value="dazzle">Dazzle</option>
+                        <option value="death-prophet">Death Prophet</option>
+                        <option value="disruptor">Disruptor</option>
+                        <option value="doom">Doom</option>
+                        <option value="dragon-knight">Dragon Knight</option>
+                        <option value="drow-ranger">Drow Ranger</option>
+                        <option value="earth-spirit">Earth Spirit</option>
+                        <option value="earthshaker">Earthshaker</option>
+                        <option value="elder-titan">Elder Titan</option>
+                        <option value="ember-spirit">Ember Spirit</option>
+                        <option value="enchantress">Enchantress</option>
+                        <option value="enigma">Enigma</option>
+                        <option value="faceless-void">Faceless Void</option>
+                        <option value="grimstroke">Grimstroke</option>
+                        <option value="gyrocopter">Gyrocopter</option>
+                        <option value="hoodwink">Hoodwink</option>
+                        <option value="huskar">Huskar</option>
+                        <option value="invoker">Invoker</option>
+                        <option value="io">Io</option>
+                        <option value="jakiro">Jakiro</option>
+                        <option value="juggernaut">Juggernaut</option>
+                        <option value="keeper-of-the-light">Keeper of the Light</option>
+                        <option value="kunkka">Kunkka</option>
+                        <option value="legion-commander">Legion Commander</option>
+                        <option value="leshrac">Leshrac</option>
+                        <option value="lich">Lich</option>
+                        <option value="lifestealer">Lifestealer</option>
+                        <option value="lina">Lina</option>
+                        <option value="lion">Lion</option>
+                        <option value="lone-druid">Lone Druid</option>
+                        <option value="luna">Luna</option>
+                        <option value="lycan">Lycan</option>
+                        <option value="magnus">Magnus</option>
+                        <option value="marci">Marci</option>
+                        <option value="mars">Mars</option>
+                        <option value="medusa">Medusa</option>
+                        <option value="meepo">Meepo</option>
+                        <option value="mirana">Mirana</option>
+                        <option value="monkey-king">Monkey King</option>
+                        <option value="morphling">Morphling</option>
+                        <option value="muerta">Muerta</option>
+                        <option value="naga-siren">Naga Siren</option>
+                        <option value="natures-prophet">Nature's Prophet</option>
+                        <option value="necrophos">Necrophos</option>
+                        <option value="night-stalker">Night Stalker</option>
+                        <option value="nyx-assassin">Nyx Assassin</option>
+                        <option value="ogre-magi">Ogre Magi</option>
+                        <option value="omniknight">Omniknight</option>
+                        <option value="oracle">Oracle</option>
+                        <option value="outworld-destroyer">Outworld Destroyer</option>
+                        <option value="pangolier">Pangolier</option>
+                        <option value="phantom-assassin">Phantom Assassin</option>
+                        <option value="phantom-lancer">Phantom Lancer</option>
+                        <option value="phoenix">Phoenix</option>
+                        <option value="puck">Puck</option>
+                        <option value="pudge">Pudge</option>
+                        <option value="pugna">Pugna</option>
+                        <option value="queen-of-pain">Queen of Pain</option>
+                        <option value="razor">Razor</option>
+                        <option value="riki">Riki</option>
+                        <option value="rubick">Rubick</option>
+                        <option value="sand-king">Sand King</option>
+                        <option value="shadow-demon">Shadow Demon</option>
+                        <option value="shadow-fiend">Shadow Fiend</option>
+                        <option value="shadow-shaman">Shadow Shaman</option>
+                        <option value="silencer">Silencer</option>
+                        <option value="skywrath-mage">Skywrath Mage</option>
+                        <option value="slardar">Slardar</option>
+                        <option value="slark">Slark</option>
+                        <option value="snapfire">Snapfire</option>
+                        <option value="sniper">Sniper</option>
+                        <option value="spectre">Spectre</option>
+                        <option value="spirit-breaker">Spirit Breaker</option>
+                        <option value="storm-spirit">Storm Spirit</option>
+                        <option value="sven">Sven</option>
+                        <option value="techies">Techies</option>
+                        <option value="templar-assassin">Templar Assassin</option>
+                        <option value="terrorblade">Terrorblade</option>
+                        <option value="tidehunter">Tidehunter</option>
+                        <option value="timbersaw">Timbersaw</option>
+                        <option value="tinker">Tinker</option>
+                        <option value="tiny">Tiny</option>
+                        <option value="treant-protector">Treant Protector</option>
+                        <option value="troll-warlord">Troll Warlord</option>
+                        <option value="tusk">Tusk</option>
+                        <option value="underlord">Underlord</option>
+                        <option value="undying">Undying</option>
+                        <option value="ursa">Ursa</option>
+                        <option value="vengeful-spirit">Vengeful Spirit</option>
+                        <option value="venomancer">Venomancer</option>
+                        <option value="viper">Viper</option>
+                        <option value="visage">Visage</option>
+                        <option value="void-spirit">Void Spirit</option>
+                        <option value="warlock">Warlock</option>
+                        <option value="weaver">Weaver</option>
+                        <option value="windranger">Windranger</option>
+                        <option value="winter-wyvern">Winter Wyvern</option>
+                        <option value="witch-doctor">Witch Doctor</option>
+                        <option value="wraith-king">Wraith King</option>
+                        <option value="zeus">Zeus</option>
+                        <!-- Hero Baru 2024-2025 -->
+                        <option value="ring-master">Ring Master</option>
+                        <option value="aurora">Aurora</option>
+                    </select>
+                </div>
             </div>
-
+            
+            <!-- Area untuk menampilkan gambar hero yang dipilih -->
+            <div id="selectedHeroesImages" style="display: none;">
+                <h3 class="text-warning text-center mb-4">Selected Heroes Builds</h3>
+                <div id="heroesDisplayArea"></div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="alert alert-info mt-4">
+                <h5 class="alert-heading">ℹ️ How to use:</h5>
+                <ul class="mb-0">
+                    <li>Select multiple heroes by holding <kbd>Ctrl</kbd> (Windows) or <kbd>Cmd</kbd> (Mac)</li>
+                    <li>Use search to filter heroes by name</li>
+                    <li>Click "Show Selections" to view builds for selected heroes</li>
+                    <li>Make sure your image files are named correctly (e.g., "anti-mage_1.png")</li>
+                </ul>
+            </div>
         </div>
     </main>
 
     <footer>
-        <div class="container-fluid d-flex justify-content-center py-3 footer bg-dark">
-            <p class="text-white pt-2">©2025 Copyright Newbie Gang</p>
+        <div class="container-fluid d-flex justify-content-center py-3 footer" style="background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);">
+            <p class="text-white pt-2 mb-0">©2025 Copyright Newbie Gang | Dota 2 is a registered trademark of Valve Corporation</p>
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
         // Fungsi untuk menampilkan gambar hero yang dipilih
         $(document).ready(function () {
-            $("#example-multiselect").on("change", function () {
-                var selectedHeroes = $("#example-multiselect option:selected");
-                var selectedImagesHtml = "";
-
-                selectedHeroes.each(function () {
-                    var heroName = $(this).val().toLowerCase();
-                    selectedImagesHtml += 
-                        '<h4 class="text-white text-center">' + $(this).text() + '</h4>' + 
-                        '<img class="rounded images" src="./assets/img/' + heroName + "_1.png" + '" alt="' + heroName + ' image 1"> ' + 
-                        '<img class="rounded images" src="./assets/img/' + heroName + "_2.png" + '" alt="' + heroName + ' image 2"> ';
-                });
-
-                $("#selectedHeroesImages").html(selectedImagesHtml);
+            // Inisialisasi count
+            updateSelectedCount();
+            
+            // Event listener untuk perubahan seleksi
+            $("#heroMultiSelect").on("change", function () {
+                updateSelectedCount();
+                updateSelectedHeroes();
+                updateToggleButton();
+            });
+            
+            // Event listener untuk search input
+            $("#searchInput").on("keyup", function() {
+                filterHeroes();
             });
         });
+        
+        // Fungsi untuk update count
+        function updateSelectedCount() {
+            var selectedCount = $("#heroMultiSelect option:selected").length;
+            $("#selectedCount").text(selectedCount);
+        }
+        
+        // Fungsi untuk update toggle button state
+        function updateToggleButton() {
+            var hasSelection = $("#heroMultiSelect option:selected").length > 0;
+            $("#toggleBtn").prop("disabled", !hasSelection);
+        }
+        
+        // Fungsi utama untuk menampilkan hero yang dipilih
+        function updateSelectedHeroes() {
+            var selectedHeroes = $("#heroMultiSelect option:selected");
+            var selectedImagesHtml = "";
+            
+            if (selectedHeroes.length === 0) {
+                selectedImagesHtml = '<div class="alert alert-warning text-center">No heroes selected. Please select heroes from the list above.</div>';
+            } else {
+                selectedHeroes.each(function () {
+                    var heroName = $(this).text();
+                    var heroValue = $(this).val();
+                    
+                    selectedImagesHtml += 
+                        '<div class="hero-container">' +
+                        '<h4 class="text-white text-center mb-3">' + heroName + '</h4>' + 
+                        '<div class="text-center">' +
+                        '<img class="rounded images" src="./assets/img/' + heroValue + '_1.png" alt="' + heroName + ' build 1" onerror="this.src=\'./assets/placeholder.png\'"> ' + 
+                        '<img class="rounded images" src="./assets/img/' + heroValue + '_2.png" alt="' + heroName + ' build 2" onerror="this.src=\'./assets/placeholder.png\'"> ' +
+                        '</div>' +
+                        '</div>';
+                });
+            }
+            
+            $("#heroesDisplayArea").html(selectedImagesHtml);
+        }
+        
+        // Fungsi untuk toggle tampilan
+        function toggleSelectedHeroes() {
+            var imagesDiv = document.getElementById('selectedHeroesImages');
+            var toggleText = document.getElementById('toggleText');
+            
+            if (imagesDiv.style.display === 'none' || imagesDiv.style.display === '') {
+                imagesDiv.style.display = 'block';
+                toggleText.textContent = 'Hide Selections';
+                // Scroll ke bagian gambar
+                imagesDiv.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                imagesDiv.style.display = 'none';
+                toggleText.textContent = 'Show Selections';
+            }
+        }
+        
+        // Fungsi untuk clear all selections
+        function clearAllSelections() {
+            $('#heroMultiSelect option:selected').prop('selected', false);
+            $('#selectedHeroesImages').hide();
+            $('#toggleText').text('Show Selections');
+            updateSelectedCount();
+            updateSelectedHeroes();
+            updateToggleButton();
+        }
+        
+        // Fungsi untuk filter heroes
+        function filterHeroes() {
+            var value = $('#searchInput').val().toLowerCase();
+            $('#heroMultiSelect option').each(function() {
+                var text = $(this).text().toLowerCase();
+                $(this).toggle(text.indexOf(value) > -1);
+            });
+        }
+        
+        // Fungsi untuk select random heroes
+        function selectRandomHeroes() {
+            // Clear dulu seleksi yang ada
+            $('#heroMultiSelect option:selected').prop('selected', false);
+            
+            // Dapatkan semua option
+            var allOptions = $('#heroMultiSelect option');
+            var totalHeroes = allOptions.length;
+            
+            // Pilih 3 random index
+            var selectedIndices = [];
+            while(selectedIndices.length < 3 && selectedIndices.length < totalHeroes) {
+                var randomIndex = Math.floor(Math.random() * totalHeroes);
+                if(!selectedIndices.includes(randomIndex)) {
+                    selectedIndices.push(randomIndex);
+                }
+            }
+            
+            // Select option yang terpilih
+            selectedIndices.forEach(function(index) {
+                $(allOptions[index]).prop('selected', true);
+            });
+            
+            // Update tampilan
+            updateSelectedCount();
+            updateSelectedHeroes();
+            updateToggleButton();
+            
+            // Tampilkan hasil
+            $('#selectedHeroesImages').show();
+            $('#toggleText').text('Hide Selections');
+            $('#selectedHeroesImages').get(0).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Fungsi untuk show all heroes (reset filter)
+        function showAllHeroes() {
+            $('#searchInput').val('');
+            $('#heroMultiSelect option').show();
+            clearAllSelections();
+        }
     </script>
 </body>
 </html>
