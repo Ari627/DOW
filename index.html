@@ -17,8 +17,22 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        /* ===== FIX FLICKERING ISSUES ===== */
+        /* ===== FIXED CSS - NO FLICKERING ===== */
+        :root {
+            --primary-dark: #0f172a;
+            --secondary-dark: #1e293b;
+            --accent-gold: #ffc107;
+            --accent-blue: #3182ce;
+            --text-light: #e2e8f0;
+            --text-muted: #a0aec0;
+            --card-bg: rgba(30, 30, 40, 0.9);
+            --card-hover: rgba(45, 55, 72, 0.95);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -28,59 +42,118 @@
             -moz-osx-font-smoothing: grayscale;
         }
         
-        html {
-            scroll-behavior: smooth;
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+            position: relative;
         }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
+            background: var(--primary-dark);
+            color: var(--text-light);
             min-height: 100vh;
             line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
             display: flex;
             flex-direction: column;
         }
         
-        /* FIX: Prevent layout shifts */
-        .hero-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 1.5rem;
-            will-change: transform;
-            backface-visibility: hidden;
-            perspective: 1000;
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: #1a202c !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         
-        /* FIX: Ensure hero cards have fixed aspect ratio */
+        .navbar-brand {
+            color: var(--accent-gold) !important;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .container-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            flex: 1;
+        }
+        
+        /* ===== HERO GRID ===== */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-grid {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                gap: 6px;
+            }
+        }
+        
         .hero-card {
-            background: rgba(30, 30, 40, 0.9);
+            background: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease, border-color 0.15s ease;
             border: 2px solid transparent;
             position: relative;
-            height: 180px;
+            height: 130px;
             display: flex;
             flex-direction: column;
         }
         
-        /* FIX: Smooth hover effects */
+        @media (max-width: 480px) {
+            .hero-card {
+                height: 110px;
+            }
+        }
+        
         .hero-card:hover {
             transform: translateY(-2px);
-            border-color: #ffc107;
+            border-color: var(--accent-gold);
         }
         
         .hero-card.selected {
-            border-color: #ffc107;
-            background: rgba(45, 55, 72, 0.95);
+            border-color: var(--accent-gold);
+            background: var(--card-hover);
         }
         
-        /* FIX: Stable image container */
+        .hero-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            z-index: 2;
+        }
+        
         .hero-image-container {
             flex: 1;
             overflow: hidden;
@@ -88,6 +161,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.2);
+            position: relative;
         }
         
         .hero-image {
@@ -98,207 +172,75 @@
         }
         
         .hero-name {
-            padding: 8px;
+            padding: 6px 4px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             background: rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.2;
         }
         
-        /* FIX: Prevent animation on page load */
-        .hero-card {
-            animation: none !important;
+        @media (max-width: 480px) {
+            .hero-name {
+                font-size: 0.7rem;
+                padding: 4px 2px;
+            }
         }
         
-        /* FIX: Smooth section transitions */
+        /* ===== LOADING STATE ===== */
+        .hero-image.loading {
+            opacity: 0;
+        }
+        
+        .hero-image.loaded {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        
+        .image-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+            background-size: 400% 400%;
+            animation: loadingShimmer 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes loadingShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* ===== SELECTED HEROES SECTION ===== */
         .selected-heroes-section {
             margin-top: 2rem;
             background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
             padding: 1.5rem;
             display: none;
-            transform: translateZ(0);
         }
         
         .selected-heroes-section.show {
             display: block;
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeIn 0.3s ease;
         }
         
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        /* FIX: Build images stability */
-        .build-image {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
-            display: block;
-            transition: transform 0.2s ease;
-        }
-        
-        .build-image:hover {
-            transform: scale(1.02);
-        }
-        
-        /* FIX: Remove problematic gradients during load */
-        .navbar {
-            background: #1a202c !important;
-        }
-        
-        .footer {
-            background: #0f172a !important;
-        }
-        
-        /* FIX: Optimize for mobile performance */
-        @media (max-width: 768px) {
-            .hero-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-                gap: 8px;
-            }
-            
-            .hero-card {
-                height: 160px;
-            }
-            
-            .hero-name {
-                font-size: 0.8rem;
-                padding: 6px;
-            }
-            
-            /* Disable hover effects on mobile */
-            .hero-card:hover {
-                transform: none;
-            }
-        }
-        
-        /* FIX: Touch optimization */
-        @media (hover: none) and (pointer: coarse) {
-            .hero-card:active {
-                transform: scale(0.98);
-                transition: transform 0.1s;
-            }
-            
-            .hero-card:hover {
-                transform: none;
-            }
-        }
-        
-        /* FIX: Loading state */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0f172a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.3s;
-        }
-        
-        /* FIX: Prevent FOUT */
-        body.loading {
-            overflow: hidden;
-        }
-        
-        /* FIX: Better button feedback */
-        .btn {
-            transition: all 0.15s ease !important;
-            transform: translateZ(0);
-        }
-        
-        .btn:active {
-            transform: scale(0.98) translateZ(0);
-        }
-        
-        /* FIX: Search input stability */
-        .search-box input {
-            transition: border-color 0.15s ease !important;
-            transform: translateZ(0);
-        }
-        
-        /* ===== UTILITY CLASSES ===== */
-        .text-center { text-align: center; }
-        .text-gold { color: #ffc107; }
-        .text-muted { color: #a0aec0; }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .mt-1 { margin-top: 0.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .mt-3 { margin-top: 1.5rem; }
-        .d-none { display: none; }
-        .d-flex { display: flex; }
-        .flex-wrap { flex-wrap: wrap; }
-        .align-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .gap-1 { gap: 0.5rem; }
-        .gap-2 { gap: 1rem; }
-        .w-100 { width: 100%; }
-        
-        /* Custom button styles */
-        .btn-primary {
-            background: #ffc107;
-            border-color: #ffc107;
-            color: #0f172a;
-            font-weight: 600;
-        }
-        
-        .btn-outline-primary {
-            color: #ffc107;
-            border-color: #ffc107;
-        }
-        
-        .btn-outline-primary:hover {
-            background: #ffc107;
-            color: #0f172a;
-        }
-        
-        /* Selection counter */
-        .selection-counter {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 20px;
-            padding: 6px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .counter-number {
-            background: #ffc107;
-            color: #0f172a;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        /* Build grid */
+        /* ===== BUILD GRID ===== */
         .build-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
+            margin-top: 1rem;
         }
         
         @media (max-width: 992px) {
@@ -313,34 +255,29 @@
             }
         }
         
-        /* Main header */
-        .main-header {
-            text-align: center;
-            margin-bottom: 2rem;
+        .build-image {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+            cursor: pointer;
         }
         
-        .main-title {
-            color: #ffc107;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
+        .build-image:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-gold);
         }
         
-        .subtitle {
-            color: #a0aec0;
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        /* Controls */
+        /* ===== CONTROLS ===== */
         .controls-container {
-            background: rgba(30, 30, 40, 0.9);
+            background: var(--card-bg);
             border-radius: 10px;
-            padding: 1.2rem;
+            padding: 1rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
             justify-content: space-between;
         }
@@ -351,63 +288,229 @@
             position: relative;
         }
         
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+        
         .search-box input {
             width: 100%;
             padding: 10px 10px 10px 40px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
-            color: #e2e8f0;
+            color: var(--text-light);
             font-size: 1rem;
+            transition: border-color 0.15s ease;
         }
         
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #a0aec0;
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
         }
         
-        /* Action buttons */
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         
-        /* Container */
-        .container-main {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem;
-            flex: 1;
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.15s ease;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
-        /* Footer */
+        .btn-primary {
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: #ffb300;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-outline-primary {
+            background: transparent;
+            color: var(--accent-gold);
+            border: 1px solid var(--accent-gold);
+        }
+        
+        .btn-outline-primary:hover {
+            background: rgba(255, 193, 7, 0.1);
+        }
+        
+        .btn-outline-danger {
+            background: transparent;
+            color: #f56565;
+            border: 1px solid #f56565;
+        }
+        
+        .btn-outline-danger:hover {
+            background: rgba(245, 101, 101, 0.1);
+        }
+        
+        /* ===== SELECTION COUNTER ===== */
+        .selection-counter {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 20px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .counter-number {
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== HEADER ===== */
+        .main-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .main-title {
+            color: var(--accent-gold);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ===== FOOTER ===== */
         .footer {
             background: #0f172a;
             padding: 1.5rem;
             text-align: center;
-            margin-top: auto;
+            margin-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        /* ===== MODAL ===== */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .image-modal.show {
+            opacity: 1;
+        }
+        
+        .modal-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .image-modal.show .modal-image {
+            transform: scale(1);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* ===== UTILITY ===== */
+        .text-center { text-align: center; }
+        .text-gold { color: var(--accent-gold); }
+        .text-muted { color: var(--text-muted); }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .d-flex { display: flex; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .w-100 { width: 100%; }
+        
+        /* Mobile touch optimization */
+        @media (hover: none) and (pointer: coarse) {
+            .hero-card:hover {
+                transform: none;
+            }
+            
+            .hero-card:active {
+                transform: scale(0.98);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen (temporary) -->
-    <div id="loadingScreen" class="loading">
-        <div class="text-center">
-            <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem;"></div>
-            <h4 class="text-gold">Loading Dawn of War Builds...</h4>
-        </div>
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="image-modal">
+        <button class="modal-close" onclick="closeImageModal()">&times;</button>
+        <img id="modalImage" class="modal-image" src="" alt="">
     </div>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg sticky-top">
+    <nav class="navbar navbar-expand-lg">
         <div class="container container-main">
-            <a class="navbar-brand text-gold fw-bold" href="#">
-                <img src="./assets/favicon/favicon-32x32.png" alt="Logo" width="32" height="32" class="me-2">
+            <a class="navbar-brand" href="#">
+                <img src="./assets/favicon/favicon-32x32.png" alt="Logo" width="28" height="28" class="me-2">
                 Dawn of War Builds
             </a>
             <a class="btn btn-outline-primary" href="https://t.me/DOWdota2" target="_blank">
@@ -422,7 +525,7 @@
         <!-- Header -->
         <header class="main-header">
             <h1 class="main-title">DAWN OF WAR BUILDS</h1>
-            <p class="subtitle">Click on hero portraits to select and view 4 different builds for each hero</p>
+            <p class="subtitle">Click hero portraits to select and view 4 different builds for each hero</p>
         </header>
 
         <!-- Controls -->
@@ -460,7 +563,7 @@
 
         <!-- Selected Heroes Builds -->
         <section id="selectedHeroesSection" class="selected-heroes-section">
-            <div class="d-flex justify-between align-center mb-3">
+            <div class="d-flex justify-between align-center mb-2">
                 <h2 class="text-gold mb-0">Selected Heroes Builds</h2>
                 <button class="btn btn-outline-primary" id="hideBuildsBtn">
                     <i class="fas fa-times"></i>
@@ -477,159 +580,153 @@
         <p>©2025 Copyright Newbie Gang | Dota 2 is a registered trademark of Valve Corporation</p>
     </footer>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // Hero data
+        // ===== HERO DATA WITH DOTA2.COM IMAGE PATHS =====
         const heroes = [
-            { name: "Abaddon", value: "abaddon" },
-            { name: "Alchemist", value: "alchemist" },
-            { name: "Ancient Apparition", value: "ancient-apparition" },
-            { name: "Anti-Mage", value: "anti-mage" },
-            { name: "Arc Warden", value: "arc-warden" },
-            { name: "Axe", value: "axe" },
-            { name: "Bane", value: "bane" },
-            { name: "Batrider", value: "batrider" },
-            { name: "Beastmaster", value: "beastmaster" },
-            { name: "Bloodseeker", value: "bloodseeker" },
-            { name: "Bounty Hunter", value: "bounty-hunter" },
-            { name: "Brewmaster", value: "brewmaster" },
-            { name: "Bristleback", value: "bristleback" },
-            { name: "Broodmother", value: "broodmother" },
-            { name: "Centaur Warrunner", value: "centaur-warrunner" },
-            { name: "Chaos Knight", value: "chaos-knight" },
-            { name: "Chen", value: "chen" },
-            { name: "Clinkz", value: "clinkz" },
-            { name: "Clockwerk", value: "clockwerk" },
-            { name: "Crystal Maiden", value: "crystal-maiden" },
-            { name: "Dark Seer", value: "dark-seer" },
-            { name: "Dark Willow", value: "dark-willow" },
-            { name: "Dawnbreaker", value: "dawnbreaker" },
-            { name: "Dazzle", value: "dazzle" },
-            { name: "Death Prophet", value: "death-prophet" },
-            { name: "Disruptor", value: "disruptor" },
-            { name: "Doom", value: "doom" },
-            { name: "Dragon Knight", value: "dragon-knight" },
-            { name: "Drow Ranger", value: "drow-ranger" },
-            { name: "Earth Spirit", value: "earth-spirit" },
-            { name: "Earthshaker", value: "earthshaker" },
-            { name: "Elder Titan", value: "elder-titan" },
-            { name: "Ember Spirit", value: "ember-spirit" },
-            { name: "Enchantress", value: "enchantress" },
-            { name: "Enigma", value: "enigma" },
-            { name: "Faceless Void", value: "faceless-void" },
-            { name: "Grimstroke", value: "grimstroke" },
-            { name: "Gyrocopter", value: "gyrocopter" },
-            { name: "Hoodwink", value: "hoodwink" },
-            { name: "Huskar", value: "huskar" },
-            { name: "Invoker", value: "invoker" },
-            { name: "Io", value: "io" },
-            { name: "Jakiro", value: "jakiro" },
-            { name: "Juggernaut", value: "juggernaut" },
-            { name: "Keeper of the Light", value: "keeper-of-the-light" },
-            { name: "Kunkka", value: "kunkka" },
-            { name: "Legion Commander", value: "legion-commander" },
-            { name: "Leshrac", value: "leshrac" },
-            { name: "Lich", value: "lich" },
-            { name: "Lifestealer", value: "lifestealer" },
-            { name: "Lina", value: "lina" },
-            { name: "Lion", value: "lion" },
-            { name: "Lone Druid", value: "lone-druid" },
-            { name: "Luna", value: "luna" },
-            { name: "Lycan", value: "lycan" },
-            { name: "Magnus", value: "magnus" },
-            { name: "Marci", value: "marci" },
-            { name: "Mars", value: "mars" },
-            { name: "Medusa", value: "medusa" },
-            { name: "Meepo", value: "meepo" },
-            { name: "Mirana", value: "mirana" },
-            { name: "Monkey King", value: "monkey-king" },
-            { name: "Morphling", value: "morphling" },
-            { name: "Naga Siren", value: "naga-siren" },
-            { name: "Nature's Prophet", value: "natures-prophet" },
-            { name: "Necrophos", value: "necrophos" },
-            { name: "Night Stalker", value: "night-stalker" },
-            { name: "Nyx Assassin", value: "nyx-assassin" },
-            { name: "Ogre Magi", value: "ogre-magi" },
-            { name: "Omniknight", value: "omniknight" },
-            { name: "Oracle", value: "oracle" },
-            { name: "Outworld Destroyer", value: "outworld-destroyer" },
-            { name: "Pangolier", value: "pangolier" },
-            { name: "Phantom Assassin", value: "phantom-assassin" },
-            { name: "Phantom Lancer", value: "phantom-lancer" },
-            { name: "Phoenix", value: "phoenix" },
-            { name: "Puck", value: "puck" },
-            { name: "Pudge", value: "pudge" },
-            { name: "Pugna", value: "pugna" },
-            { name: "Queen of Pain", value: "queen-of-pain" },
-            { name: "Razor", value: "razor" },
-            { name: "Riki", value: "riki" },
-            { name: "Rubick", value: "rubick" },
-            { name: "Sand King", value: "sand-king" },
-            { name: "Shadow Demon", value: "shadow-demon" },
-            { name: "Shadow Fiend", value: "shadow-fiend" },
-            { name: "Shadow Shaman", value: "shadow-shaman" },
-            { name: "Silencer", value: "silencer" },
-            { name: "Skywrath Mage", value: "skywrath-mage" },
-            { name: "Slardar", value: "slardar" },
-            { name: "Slark", value: "slark" },
-            { name: "Snapfire", value: "snapfire" },
-            { name: "Sniper", value: "sniper" },
-            { name: "Spectre", value: "spectre" },
-            { name: "Spirit Breaker", value: "spirit-breaker" },
-            { name: "Storm Spirit", value: "storm-spirit" },
-            { name: "Sven", value: "sven" },
-            { name: "Techies", value: "techies" },
-            { name: "Templar Assassin", value: "templar-assassin" },
-            { name: "Terrorblade", value: "terrorblade" },
-            { name: "Tidehunter", value: "tidehunter" },
-            { name: "Timbersaw", value: "timbersaw" },
-            { name: "Tinker", value: "tinker" },
-            { name: "Tiny", value: "tiny" },
-            { name: "Treant Protector", value: "treant-protector" },
-            { name: "Troll Warlord", value: "troll-warlord" },
-            { name: "Tusk", value: "tusk" },
-            { name: "Underlord", value: "underlord" },
-            { name: "Undying", value: "undying" },
-            { name: "Ursa", value: "ursa" },
-            { name: "Vengeful Spirit", value: "vengeful-spirit" },
-            { name: "Venomancer", value: "venomancer" },
-            { name: "Viper", value: "viper" },
-            { name: "Visage", value: "visage" },
-            { name: "Void Spirit", value: "void-spirit" },
-            { name: "Warlock", value: "warlock" },
-            { name: "Weaver", value: "weaver" },
-            { name: "Windranger", value: "windranger" },
-            { name: "Winter Wyvern", value: "winter-wyvern" },
-            { name: "Witch Doctor", value: "witch-doctor" },
-            { name: "Wraith King", value: "wraith-king" },
-            { name: "Zeus", value: "zeus" }
+            // Strength Heroes
+            { name: "Abaddon", value: "abaddon", dotaId: "abaddon" },
+            { name: "Alchemist", value: "alchemist", dotaId: "alchemist" },
+            { name: "Axe", value: "axe", dotaId: "axe" },
+            { name: "Bristleback", value: "bristleback", dotaId: "bristleback" },
+            { name: "Centaur Warrunner", value: "centaur-warrunner", dotaId: "centaur_warrunner" },
+            { name: "Chaos Knight", value: "chaos-knight", dotaId: "chaos_knight" },
+            { name: "Dawnbreaker", value: "dawnbreaker", dotaId: "dawnbreaker" },
+            { name: "Doom", value: "doom", dotaId: "doom" },
+            { name: "Dragon Knight", value: "dragon-knight", dotaId: "dragon_knight" },
+            { name: "Earth Spirit", value: "earth-spirit", dotaId: "earth_spirit" },
+            { name: "Earthshaker", value: "earthshaker", dotaId: "earthshaker" },
+            { name: "Elder Titan", value: "elder-titan", dotaId: "elder_titan" },
+            { name: "Huskar", value: "huskar", dotaId: "huskar" },
+            { name: "Kunkka", value: "kunkka", dotaId: "kunkka" },
+            { name: "Legion Commander", value: "legion-commander", dotaId: "legion_commander" },
+            { name: "Lifestealer", value: "lifestealer", dotaId: "lifestealer" },
+            { name: "Mars", value: "mars", dotaId: "mars" },
+            { name: "Night Stalker", value: "night-stalker", dotaId: "night_stalker" },
+            { name: "Ogre Magi", value: "ogre-magi", dotaId: "ogre_magi" },
+            { name: "Omniknight", value: "omniknight", dotaId: "omniknight" },
+            { name: "Phoenix", value: "phoenix", dotaId: "phoenix" },
+            { name: "Pudge", value: "pudge", dotaId: "pudge" },
+            { name: "Sand King", value: "sand-king", dotaId: "sand_king" },
+            { name: "Slardar", value: "slardar", dotaId: "slardar" },
+            { name: "Spirit Breaker", value: "spirit-breaker", dotaId: "spirit_breaker" },
+            { name: "Sven", value: "sven", dotaId: "sven" },
+            { name: "Tidehunter", value: "tidehunter", dotaId: "tidehunter" },
+            { name: "Timbersaw", value: "timbersaw", dotaId: "timbersaw" },
+            { name: "Tiny", value: "tiny", dotaId: "tiny" },
+            { name: "Treant Protector", value: "treant-protector", dotaId: "treant_protector" },
+            { name: "Tusk", value: "tusk", dotaId: "tusk" },
+            { name: "Underlord", value: "underlord", dotaId: "underlord" },
+            { name: "Undying", value: "undying", dotaId: "undying" },
+            { name: "Wraith King", value: "wraith-king", dotaId: "wraith_king" },
+            
+            // Agility Heroes
+            { name: "Anti-Mage", value: "anti-mage", dotaId: "antimage" },
+            { name: "Arc Warden", value: "arc-warden", dotaId: "arc_warden" },
+            { name: "Bloodseeker", value: "bloodseeker", dotaId: "bloodseeker" },
+            { name: "Bounty Hunter", value: "bounty-hunter", dotaId: "bounty_hunter" },
+            { name: "Clinkz", value: "clinkz", dotaId: "clinkz" },
+            { name: "Drow Ranger", value: "drow-ranger", dotaId: "drow_ranger" },
+            { name: "Ember Spirit", value: "ember-spirit", dotaId: "ember_spirit" },
+            { name: "Faceless Void", value: "faceless-void", dotaId: "faceless_void" },
+            { name: "Gyrocopter", value: "gyrocopter", dotaId: "gyrocopter" },
+            { name: "Hoodwink", value: "hoodwink", dotaId: "hoodwink" },
+            { name: "Juggernaut", value: "juggernaut", dotaId: "juggernaut" },
+            { name: "Luna", value: "luna", dotaId: "luna" },
+            { name: "Medusa", value: "medusa", dotaId: "medusa" },
+            { name: "Meepo", value: "meepo", dotaId: "meepo" },
+            { name: "Mirana", value: "mirana", dotaId: "mirana" },
+            { name: "Monkey King", value: "monkey-king", dotaId: "monkey_king" },
+            { name: "Morphling", value: "morphling", dotaId: "morphling" },
+            { name: "Naga Siren", value: "naga-siren", dotaId: "naga_siren" },
+            { name: "Phantom Assassin", value: "phantom-assassin", dotaId: "phantom_assassin" },
+            { name: "Phantom Lancer", value: "phantom-lancer", dotaId: "phantom_lancer" },
+            { name: "Razor", value: "razor", dotaId: "razor" },
+            { name: "Riki", value: "riki", dotaId: "riki" },
+            { name: "Shadow Fiend", value: "shadow-fiend", dotaId: "nevermore" },
+            { name: "Slark", value: "slark", dotaId: "slark" },
+            { name: "Sniper", value: "sniper", dotaId: "sniper" },
+            { name: "Spectre", value: "spectre", dotaId: "spectre" },
+            { name: "Templar Assassin", value: "templar-assassin", dotaId: "templar_assassin" },
+            { name: "Terrorblade", value: "terrorblade", dotaId: "terrorblade" },
+            { name: "Troll Warlord", value: "troll-warlord", dotaId: "troll_warlord" },
+            { name: "Ursa", value: "ursa", dotaId: "ursa" },
+            { name: "Vengeful Spirit", value: "vengeful-spirit", dotaId: "vengefulspirit" },
+            { name: "Venomancer", value: "venomancer", dotaId: "venomancer" },
+            { name: "Viper", value: "viper", dotaId: "viper" },
+            { name: "Weaver", value: "weaver", dotaId: "weaver" },
+            
+            // Intelligence Heroes
+            { name: "Ancient Apparition", value: "ancient-apparition", dotaId: "ancient_apparition" },
+            { name: "Aurora", value: "aurora", dotaId: "aurora" },
+            { name: "Bane", value: "bane", dotaId: "bane" },
+            { name: "Batrider", value: "batrider", dotaId: "batrider" },
+            { name: "Chen", value: "chen", dotaId: "chen" },
+            { name: "Crystal Maiden", value: "crystal-maiden", dotaId: "crystal_maiden" },
+            { name: "Dark Seer", value: "dark-seer", dotaId: "dark_seer" },
+            { name: "Dark Willow", value: "dark-willow", dotaId: "dark_willow" },
+            { name: "Dazzle", value: "dazzle", dotaId: "dazzle" },
+            { name: "Death Prophet", value: "death-prophet", dotaId: "death_prophet" },
+            { name: "Disruptor", value: "disruptor", dotaId: "disruptor" },
+            { name: "Enchantress", value: "enchantress", dotaId: "enchantress" },
+            { name: "Enigma", value: "enigma", dotaId: "enigma" },
+            { name: "Grimstroke", value: "grimstroke", dotaId: "grimstroke" },
+            { name: "Invoker", value: "invoker", dotaId: "invoker" },
+            { name: "Io", value: "io", dotaId: "wisp" },
+            { name: "Jakiro", value: "jakiro", dotaId: "jakiro" },
+            { name: "Keeper of the Light", value: "keeper-of-the-light", dotaId: "keeper_of_the_light" },
+            { name: "Leshrac", value: "leshrac", dotaId: "leshrac" },
+            { name: "Lich", value: "lich", dotaId: "lich" },
+            { name: "Lina", value: "lina", dotaId: "lina" },
+            { name: "Lion", value: "lion", dotaId: "lion" },
+            { name: "Muerta", value: "muerta", dotaId: "muerta" },
+            { name: "Nature's Prophet", value: "natures-prophet", dotaId: "furion" },
+            { name: "Necrophos", value: "necrophos", dotaId: "necrophos" },
+            { name: "Oracle", value: "oracle", dotaId: "oracle" },
+            { name: "Outworld Destroyer", value: "outworld-destroyer", dotaId: "obsidian_destroyer" },
+            { name: "Puck", value: "puck", dotaId: "puck" },
+            { name: "Pugna", value: "pugna", dotaId: "pugna" },
+            { name: "Queen of Pain", value: "queen-of-pain", dotaId: "queenofpain" },
+            { name: "Rubick", value: "rubick", dotaId: "rubick" },
+            { name: "Shadow Demon", value: "shadow-demon", dotaId: "shadow_demon" },
+            { name: "Shadow Shaman", value: "shadow-shaman", dotaId: "shadow_shaman" },
+            { name: "Silencer", value: "silencer", dotaId: "silencer" },
+            { name: "Skywrath Mage", value: "skywrath-mage", dotaId: "skywrath_mage" },
+            { name: "Storm Spirit", value: "storm-spirit", dotaId: "storm_spirit" },
+            { name: "Techies", value: "techies", dotaId: "techies" },
+            { name: "Tinker", value: "tinker", dotaId: "tinker" },
+            { name: "Visage", value: "visage", dotaId: "visage" },
+            { name: "Void Spirit", value: "void-spirit", dotaId: "void_spirit" },
+            { name: "Warlock", value: "warlock", dotaId: "warlock" },
+            { name: "Windranger", value: "windranger", dotaId: "windrunner" },
+            { name: "Winter Wyvern", value: "winter-wyvern", dotaId: "winter_wyvern" },
+            { name: "Witch Doctor", value: "witch-doctor", dotaId: "witch_doctor" },
+            { name: "Zeus", value: "zeus", dotaId: "zeus" },
+            
+            // Universal Heroes
+            { name: "Beastmaster", value: "beastmaster", dotaId: "beastmaster" },
+            { name: "Brewmaster", value: "brewmaster", dotaId: "brewmaster" },
+            { name: "Broodmother", value: "broodmother", dotaId: "broodmother" },
+            { name: "Clockwerk", value: "clockwerk", dotaId: "rattletrap" },
+            { name: "Lone Druid", value: "lone-druid", dotaId: "lone_druid" },
+            { name: "Lycan", value: "lycan", dotaId: "lycan" },
+            { name: "Magnus", value: "magnus", dotaId: "magnataur" },
+            { name: "Marci", value: "marci", dotaId: "marci" },
+            { name: "Pangolier", value: "pangolier", dotaId: "pangolier" },
+            { name: "Snapfire", value: "snapfire", dotaId: "snapfire" }
         ];
 
         // State management
         let selectedHeroes = [];
-        let isLoading = true;
+        let imageCache = new Map();
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            // Hide loading screen after delay
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    isLoading = false;
-                    initializeHeroGrid();
-                }, 300);
-            }, 800);
-            
+            initializeHeroGrid();
             setupEventListeners();
+            updateSelectionCounter();
         });
 
-        // Initialize hero grid
+        // Initialize hero grid with Dota 2 images
         function initializeHeroGrid() {
             const heroGrid = document.getElementById('heroGrid');
             heroGrid.innerHTML = '';
@@ -640,37 +737,104 @@
                 heroCard.dataset.hero = hero.value;
                 heroCard.dataset.name = hero.name.toLowerCase();
                 
+                // Create image URL from Dota 2 CDN
+                const imageUrl = getHeroImageUrl(hero.dotaId);
+                
                 heroCard.innerHTML = `
                     <div class="hero-image-container">
-                        <img class="hero-image" 
-                             src="./assets/hero-icons/${hero.value}.png" 
+                        <div class="image-placeholder"></div>
+                        <img class="hero-image loading" 
+                             data-src="${imageUrl}"
                              alt="${hero.name}"
                              loading="lazy"
-                             onerror="this.onerror=null; this.src='./assets/placeholder.png';">
+                             onload="this.classList.add('loaded'); this.classList.remove('loading')"
+                             onerror="handleImageError(this, '${hero.dotaId}')">
                     </div>
                     <div class="hero-name">${hero.name}</div>
                 `;
                 
-                // Use passive event listener for better performance
-                heroCard.addEventListener('click', handleHeroClick, { passive: true });
+                heroCard.addEventListener('click', () => toggleHeroSelection(hero.value));
                 heroGrid.appendChild(heroCard);
             });
             
-            updateSelectionCounter();
+            // Lazy load images after DOM is ready
+            setTimeout(loadLazyImages, 100);
         }
 
-        // Handle hero click
-        function handleHeroClick(e) {
-            if (isLoading) return;
+        // Get hero image URL from Dota 2 CDN (multiple sources)
+        function getHeroImageUrl(heroId) {
+            // Try multiple CDN sources
+            const sources = [
+                // Source 1: Steam CDN (official)
+                `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${heroId}.png`,
+                
+                // Source 2: Dota 2 Wiki
+                `https://dota2.herokuapp.com/heroes/${heroId}/icon`,
+                
+                // Source 3: Dotabuff CDN
+                `https://www.dotabuff.com/assets/heroes/${heroId}-e025e6e36d0d8ebc6d6c5d8587c5c2e2c4bb0326f6e2e2e2e2e2e2e2e2e2e2e2.png`,
+                
+                // Source 4: Alternative CDN
+                `https://cdn.dota2.com/apps/dota2/images/heroes/${heroId}_sb.png`
+            ];
             
-            const heroCard = e.currentTarget;
-            const heroValue = heroCard.dataset.hero;
+            // Return the first source, cache will handle fallbacks
+            return sources[0];
+        }
+
+        // Fallback image sources if primary fails
+        function getFallbackImageUrl(heroId) {
+            const fallbacks = [
+                `https://cdn.dota2.com/apps/dota2/images/heroes/${heroId}_lg.png`,
+                `https://cdn.dota2.com/apps/dota2/images/heroes/${heroId}_full.png`,
+                `./assets/placeholder.png`
+            ];
             
-            // Toggle selection
+            // Try to get from cache first
+            if (imageCache.has(heroId)) {
+                return imageCache.get(heroId);
+            }
+            
+            return fallbacks[0];
+        }
+
+        // Handle image loading errors
+        function handleImageError(img, heroId) {
+            const fallbackUrl = getFallbackImageUrl(heroId);
+            
+            // Cache the working URL
+            if (!imageCache.has(heroId)) {
+                imageCache.set(heroId, fallbackUrl);
+            }
+            
+            // Retry with fallback
+            img.src = fallbackUrl;
+            img.classList.add('loaded');
+            img.classList.remove('loading');
+        }
+
+        // Lazy load images
+        function loadLazyImages() {
+            const lazyImages = document.querySelectorAll('.hero-image[data-src]');
+            
+            lazyImages.forEach(img => {
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    delete img.dataset.src;
+                }
+            });
+        }
+
+        // Toggle hero selection
+        function toggleHeroSelection(heroValue) {
+            const heroCard = document.querySelector(`.hero-card[data-hero="${heroValue}"]`);
+            
             if (selectedHeroes.includes(heroValue)) {
+                // Deselect
                 selectedHeroes = selectedHeroes.filter(h => h !== heroValue);
                 heroCard.classList.remove('selected');
             } else {
+                // Select
                 selectedHeroes.push(heroValue);
                 heroCard.classList.add('selected');
             }
@@ -698,7 +862,7 @@
 
         // Show selected heroes builds
         function showSelectedHeroesBuilds() {
-            if (selectedHeroes.length === 0 || isLoading) return;
+            if (selectedHeroes.length === 0) return;
             
             const displayArea = document.getElementById('heroesDisplayArea');
             displayArea.innerHTML = '';
@@ -710,15 +874,16 @@
                 // Create 4 build images
                 let buildImages = '';
                 for (let i = 1; i <= 4; i++) {
+                    const buildUrl = `./assets/img/${heroValue}_${i}.png`;
                     buildImages += `
                         <div>
                             <p class="text-center text-muted mb-1">Build ${i}</p>
                             <img class="build-image" 
-                                 src="./assets/img/${heroValue}_${i}.png" 
+                                 src="${buildUrl}" 
                                  alt="${hero.name} Build ${i}"
                                  loading="lazy"
-                                 onerror="this.onerror=null; this.src='./assets/placeholder.png';"
-                                 onclick="openImagePreview(this.src, '${hero.name} Build ${i}')">
+                                 onerror="this.src='./assets/placeholder.png'"
+                                 onclick="openImageModal('${buildUrl}', '${hero.name} Build ${i}')">
                         </div>
                     `;
                 }
@@ -741,7 +906,7 @@
             
             // Smooth scroll
             setTimeout(() => {
-                buildsSection.scrollIntoView({ behavior: 'smooth' });
+                buildsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50);
         }
 
@@ -753,8 +918,6 @@
 
         // Select all heroes
         function selectAllHeroes() {
-            if (isLoading) return;
-            
             const allCards = document.querySelectorAll('.hero-card');
             selectedHeroes = heroes.map(hero => hero.value);
             
@@ -768,8 +931,6 @@
 
         // Clear all selections
         function clearAllSelections() {
-            if (isLoading) return;
-            
             const allCards = document.querySelectorAll('.hero-card');
             selectedHeroes = [];
             
@@ -797,64 +958,31 @@
             });
         }
 
-        // Open image preview
-        function openImagePreview(src, alt) {
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.95);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                cursor: pointer;
-                opacity: 0;
-                transition: opacity 0.3s;
-            `;
+        // Image modal functions
+        function openImageModal(src, alt) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
             
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = alt;
-            img.style.cssText = `
-                max-width: 95%;
-                max-height: 95%;
-                object-fit: contain;
-                border-radius: 8px;
-                transform: scale(0.9);
-                transition: transform 0.3s;
-            `;
-            
-            modal.appendChild(img);
-            document.body.appendChild(modal);
-            
-            // Fade in
-            setTimeout(() => {
-                modal.style.opacity = '1';
-                img.style.transform = 'scale(1)';
-            }, 10);
-            
-            // Close on click
-            modal.addEventListener('click', () => {
-                modal.style.opacity = '0';
-                img.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    document.body.removeChild(modal);
-                }, 300);
-            });
+            modalImage.src = src;
+            modalImage.alt = alt;
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Search input
+            // Search input with debounce
             const searchInput = document.getElementById('searchInput');
             let searchTimeout;
             searchInput.addEventListener('input', () => {
                 clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(searchHeroes, 150);
+                searchTimeout = setTimeout(searchHeroes, 200);
             });
             
             // Buttons
@@ -863,13 +991,43 @@
             document.getElementById('selectAllBtn').addEventListener('click', selectAllHeroes);
             document.getElementById('clearAllBtn').addEventListener('click', clearAllSelections);
             
-            // Keyboard shortcuts
+            // Close modal on ESC
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
+                    closeImageModal();
                     hideSelectedHeroesBuilds();
                 }
             });
+            
+            // Close modal on background click
+            document.getElementById('imageModal').addEventListener('click', (e) => {
+                if (e.target.id === 'imageModal') {
+                    closeImageModal();
+                }
+            });
+            
+            // Prevent default touch behaviors
+            document.addEventListener('touchstart', (e) => {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                }
+            }, { passive: false });
         }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + A to select all
+            if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+                e.preventDefault();
+                selectAllHeroes();
+            }
+            
+            // Ctrl/Cmd + F to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
     </script>
 </body>
 </html>
