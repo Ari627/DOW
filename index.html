@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        /* ===== FIXED CSS - NO FLICKERING ===== */
+        /* ===== RESET & BASE STYLES ===== */
         :root {
             --primary-dark: #0f172a;
             --secondary-dark: #1e293b;
@@ -37,25 +37,47 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
         
         html, body {
             height: 100%;
+            width: 100%;
             overflow-x: hidden;
-            position: relative;
         }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: var(--primary-dark);
             color: var(--text-light);
-            min-height: 100vh;
             line-height: 1.6;
+            position: relative;
+            overflow-y: auto; /* PERBAIKAN: Enable vertical scrolling */
+        }
+        
+        /* ===== LOADING SCREEN ===== */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        
+        #loadingScreen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.25em;
         }
         
         /* ===== NAVBAR ===== */
@@ -65,7 +87,7 @@
             padding: 0.8rem 0;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
         }
         
         .navbar-brand {
@@ -82,7 +104,7 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 1rem;
-            flex: 1;
+            min-height: calc(100vh - 200px); /* Pastikan konten cukup tinggi */
         }
         
         /* ===== HERO GRID ===== */
@@ -190,16 +212,7 @@
             }
         }
         
-        /* ===== LOADING STATE ===== */
-        .hero-image.loading {
-            opacity: 0;
-        }
-        
-        .hero-image.loaded {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-        
+        /* ===== IMAGE PLACEHOLDER ===== */
         .image-placeholder {
             position: absolute;
             top: 0;
@@ -208,12 +221,6 @@
             height: 100%;
             background: linear-gradient(45deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
             background-size: 400% 400%;
-            animation: loadingShimmer 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes loadingShimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
         }
         
         /* ===== SELECTED HEROES SECTION ===== */
@@ -433,16 +440,14 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 10000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
         
         .image-modal.show {
-            opacity: 1;
+            display: flex;
         }
         
         .modal-image {
@@ -450,12 +455,6 @@
             max-height: 90%;
             object-fit: contain;
             border-radius: 8px;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        
-        .image-modal.show .modal-image {
-            transform: scale(1);
         }
         
         .modal-close {
@@ -500,6 +499,14 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="text-center">
+            <div class="spinner-border text-warning mb-3"></div>
+            <h4 class="text-gold">Loading Dawn of War Builds...</h4>
+        </div>
+    </div>
+
     <!-- Image Preview Modal -->
     <div id="imageModal" class="image-modal">
         <button class="modal-close" onclick="closeImageModal()">&times;</button>
@@ -581,155 +588,101 @@
     </footer>
 
     <script>
-        // ===== HERO DATA WITH DOTA2.COM IMAGE PATHS =====
+        // ===== SIMPLIFIED HERO DATA =====
         const heroes = [
-            // Strength Heroes
+            // Sample heroes for testing - add more as needed
             { name: "Abaddon", value: "abaddon", dotaId: "abaddon" },
             { name: "Alchemist", value: "alchemist", dotaId: "alchemist" },
-            { name: "Axe", value: "axe", dotaId: "axe" },
-            { name: "Bristleback", value: "bristleback", dotaId: "bristleback" },
-            { name: "Centaur Warrunner", value: "centaur-warrunner", dotaId: "centaur_warrunner" },
-            { name: "Chaos Knight", value: "chaos-knight", dotaId: "chaos_knight" },
-            { name: "Dawnbreaker", value: "dawnbreaker", dotaId: "dawnbreaker" },
-            { name: "Doom", value: "doom", dotaId: "doom" },
-            { name: "Dragon Knight", value: "dragon-knight", dotaId: "dragon_knight" },
-            { name: "Earth Spirit", value: "earth-spirit", dotaId: "earth_spirit" },
-            { name: "Earthshaker", value: "earthshaker", dotaId: "earthshaker" },
-            { name: "Elder Titan", value: "elder-titan", dotaId: "elder_titan" },
-            { name: "Huskar", value: "huskar", dotaId: "huskar" },
-            { name: "Kunkka", value: "kunkka", dotaId: "kunkka" },
-            { name: "Legion Commander", value: "legion-commander", dotaId: "legion_commander" },
-            { name: "Lifestealer", value: "lifestealer", dotaId: "lifestealer" },
-            { name: "Mars", value: "mars", dotaId: "mars" },
-            { name: "Night Stalker", value: "night-stalker", dotaId: "night_stalker" },
-            { name: "Ogre Magi", value: "ogre-magi", dotaId: "ogre_magi" },
-            { name: "Omniknight", value: "omniknight", dotaId: "omniknight" },
-            { name: "Phoenix", value: "phoenix", dotaId: "phoenix" },
-            { name: "Pudge", value: "pudge", dotaId: "pudge" },
-            { name: "Sand King", value: "sand-king", dotaId: "sand_king" },
-            { name: "Slardar", value: "slardar", dotaId: "slardar" },
-            { name: "Spirit Breaker", value: "spirit-breaker", dotaId: "spirit_breaker" },
-            { name: "Sven", value: "sven", dotaId: "sven" },
-            { name: "Tidehunter", value: "tidehunter", dotaId: "tidehunter" },
-            { name: "Timbersaw", value: "timbersaw", dotaId: "timbersaw" },
-            { name: "Tiny", value: "tiny", dotaId: "tiny" },
-            { name: "Treant Protector", value: "treant-protector", dotaId: "treant_protector" },
-            { name: "Tusk", value: "tusk", dotaId: "tusk" },
-            { name: "Underlord", value: "underlord", dotaId: "underlord" },
-            { name: "Undying", value: "undying", dotaId: "undying" },
-            { name: "Wraith King", value: "wraith-king", dotaId: "wraith_king" },
-            
-            // Agility Heroes
             { name: "Anti-Mage", value: "anti-mage", dotaId: "antimage" },
-            { name: "Arc Warden", value: "arc-warden", dotaId: "arc_warden" },
+            { name: "Axe", value: "axe", dotaId: "axe" },
+            { name: "Bane", value: "bane", dotaId: "bane" },
             { name: "Bloodseeker", value: "bloodseeker", dotaId: "bloodseeker" },
             { name: "Bounty Hunter", value: "bounty-hunter", dotaId: "bounty_hunter" },
-            { name: "Clinkz", value: "clinkz", dotaId: "clinkz" },
+            { name: "Centaur Warrunner", value: "centaur-warrunner", dotaId: "centaur_warrunner" },
+            { name: "Chaos Knight", value: "chaos-knight", dotaId: "chaos_knight" },
+            { name: "Crystal Maiden", value: "crystal-maiden", dotaId: "crystal_maiden" },
+            { name: "Dazzle", value: "dazzle", dotaId: "dazzle" },
+            { name: "Dragon Knight", value: "dragon-knight", dotaId: "dragon_knight" },
             { name: "Drow Ranger", value: "drow-ranger", dotaId: "drow_ranger" },
-            { name: "Ember Spirit", value: "ember-spirit", dotaId: "ember_spirit" },
+            { name: "Earthshaker", value: "earthshaker", dotaId: "earthshaker" },
             { name: "Faceless Void", value: "faceless-void", dotaId: "faceless_void" },
             { name: "Gyrocopter", value: "gyrocopter", dotaId: "gyrocopter" },
-            { name: "Hoodwink", value: "hoodwink", dotaId: "hoodwink" },
+            { name: "Huskar", value: "huskar", dotaId: "huskar" },
+            { name: "Invoker", value: "invoker", dotaId: "invoker" },
             { name: "Juggernaut", value: "juggernaut", dotaId: "juggernaut" },
+            { name: "Kunkka", value: "kunkka", dotaId: "kunkka" },
+            { name: "Legion Commander", value: "legion-commander", dotaId: "legion_commander" },
+            { name: "Lina", value: "lina", dotaId: "lina" },
+            { name: "Lion", value: "lion", dotaId: "lion" },
             { name: "Luna", value: "luna", dotaId: "luna" },
             { name: "Medusa", value: "medusa", dotaId: "medusa" },
-            { name: "Meepo", value: "meepo", dotaId: "meepo" },
             { name: "Mirana", value: "mirana", dotaId: "mirana" },
-            { name: "Monkey King", value: "monkey-king", dotaId: "monkey_king" },
-            { name: "Morphling", value: "morphling", dotaId: "morphling" },
             { name: "Naga Siren", value: "naga-siren", dotaId: "naga_siren" },
-            { name: "Phantom Assassin", value: "phantom-assassin", dotaId: "phantom_assassin" },
-            { name: "Phantom Lancer", value: "phantom-lancer", dotaId: "phantom_lancer" },
+            { name: "Nature's Prophet", value: "natures-prophet", dotaId: "furion" },
+            { name: "Necrophos", value: "necrophos", dotaId: "necrophos" },
+            { name: "Pudge", value: "pudge", dotaId: "pudge" },
             { name: "Razor", value: "razor", dotaId: "razor" },
             { name: "Riki", value: "riki", dotaId: "riki" },
+            { name: "Sand King", value: "sand-king", dotaId: "sand_king" },
             { name: "Shadow Fiend", value: "shadow-fiend", dotaId: "nevermore" },
             { name: "Slark", value: "slark", dotaId: "slark" },
             { name: "Sniper", value: "sniper", dotaId: "sniper" },
             { name: "Spectre", value: "spectre", dotaId: "spectre" },
+            { name: "Storm Spirit", value: "storm-spirit", dotaId: "storm_spirit" },
+            { name: "Sven", value: "sven", dotaId: "sven" },
             { name: "Templar Assassin", value: "templar-assassin", dotaId: "templar_assassin" },
-            { name: "Terrorblade", value: "terrorblade", dotaId: "terrorblade" },
-            { name: "Troll Warlord", value: "troll-warlord", dotaId: "troll_warlord" },
+            { name: "Tidehunter", value: "tidehunter", dotaId: "tidehunter" },
+            { name: "Tinker", value: "tinker", dotaId: "tinker" },
+            { name: "Tiny", value: "tiny", dotaId: "tiny" },
+            { name: "Treant Protector", value: "treant-protector", dotaId: "treant_protector" },
             { name: "Ursa", value: "ursa", dotaId: "ursa" },
             { name: "Vengeful Spirit", value: "vengeful-spirit", dotaId: "vengefulspirit" },
             { name: "Venomancer", value: "venomancer", dotaId: "venomancer" },
             { name: "Viper", value: "viper", dotaId: "viper" },
-            { name: "Weaver", value: "weaver", dotaId: "weaver" },
-            
-            // Intelligence Heroes
-            { name: "Ancient Apparition", value: "ancient-apparition", dotaId: "ancient_apparition" },
-            { name: "Aurora", value: "aurora", dotaId: "aurora" },
-            { name: "Bane", value: "bane", dotaId: "bane" },
-            { name: "Batrider", value: "batrider", dotaId: "batrider" },
-            { name: "Chen", value: "chen", dotaId: "chen" },
-            { name: "Crystal Maiden", value: "crystal-maiden", dotaId: "crystal_maiden" },
-            { name: "Dark Seer", value: "dark-seer", dotaId: "dark_seer" },
-            { name: "Dark Willow", value: "dark-willow", dotaId: "dark_willow" },
-            { name: "Dazzle", value: "dazzle", dotaId: "dazzle" },
-            { name: "Death Prophet", value: "death-prophet", dotaId: "death_prophet" },
-            { name: "Disruptor", value: "disruptor", dotaId: "disruptor" },
-            { name: "Enchantress", value: "enchantress", dotaId: "enchantress" },
-            { name: "Enigma", value: "enigma", dotaId: "enigma" },
-            { name: "Grimstroke", value: "grimstroke", dotaId: "grimstroke" },
-            { name: "Invoker", value: "invoker", dotaId: "invoker" },
-            { name: "Io", value: "io", dotaId: "wisp" },
-            { name: "Jakiro", value: "jakiro", dotaId: "jakiro" },
-            { name: "Keeper of the Light", value: "keeper-of-the-light", dotaId: "keeper_of_the_light" },
-            { name: "Leshrac", value: "leshrac", dotaId: "leshrac" },
-            { name: "Lich", value: "lich", dotaId: "lich" },
-            { name: "Lina", value: "lina", dotaId: "lina" },
-            { name: "Lion", value: "lion", dotaId: "lion" },
-            { name: "Muerta", value: "muerta", dotaId: "muerta" },
-            { name: "Nature's Prophet", value: "natures-prophet", dotaId: "furion" },
-            { name: "Necrophos", value: "necrophos", dotaId: "necrophos" },
-            { name: "Oracle", value: "oracle", dotaId: "oracle" },
-            { name: "Outworld Destroyer", value: "outworld-destroyer", dotaId: "obsidian_destroyer" },
-            { name: "Puck", value: "puck", dotaId: "puck" },
-            { name: "Pugna", value: "pugna", dotaId: "pugna" },
-            { name: "Queen of Pain", value: "queen-of-pain", dotaId: "queenofpain" },
-            { name: "Rubick", value: "rubick", dotaId: "rubick" },
-            { name: "Shadow Demon", value: "shadow-demon", dotaId: "shadow_demon" },
-            { name: "Shadow Shaman", value: "shadow-shaman", dotaId: "shadow_shaman" },
-            { name: "Silencer", value: "silencer", dotaId: "silencer" },
-            { name: "Skywrath Mage", value: "skywrath-mage", dotaId: "skywrath_mage" },
-            { name: "Storm Spirit", value: "storm-spirit", dotaId: "storm_spirit" },
-            { name: "Techies", value: "techies", dotaId: "techies" },
-            { name: "Tinker", value: "tinker", dotaId: "tinker" },
-            { name: "Visage", value: "visage", dotaId: "visage" },
-            { name: "Void Spirit", value: "void-spirit", dotaId: "void_spirit" },
             { name: "Warlock", value: "warlock", dotaId: "warlock" },
+            { name: "Weaver", value: "weaver", dotaId: "weaver" },
             { name: "Windranger", value: "windranger", dotaId: "windrunner" },
-            { name: "Winter Wyvern", value: "winter-wyvern", dotaId: "winter_wyvern" },
             { name: "Witch Doctor", value: "witch-doctor", dotaId: "witch_doctor" },
-            { name: "Zeus", value: "zeus", dotaId: "zeus" },
-            
-            // Universal Heroes
-            { name: "Beastmaster", value: "beastmaster", dotaId: "beastmaster" },
-            { name: "Brewmaster", value: "brewmaster", dotaId: "brewmaster" },
-            { name: "Broodmother", value: "broodmother", dotaId: "broodmother" },
-            { name: "Clockwerk", value: "clockwerk", dotaId: "rattletrap" },
-            { name: "Lone Druid", value: "lone-druid", dotaId: "lone_druid" },
-            { name: "Lycan", value: "lycan", dotaId: "lycan" },
-            { name: "Magnus", value: "magnus", dotaId: "magnataur" },
-            { name: "Marci", value: "marci", dotaId: "marci" },
-            { name: "Pangolier", value: "pangolier", dotaId: "pangolier" },
-            { name: "Snapfire", value: "snapfire", dotaId: "snapfire" }
+            { name: "Wraith King", value: "wraith-king", dotaId: "wraith_king" },
+            { name: "Zeus", value: "zeus", dotaId: "zeus" }
         ];
 
         // State management
         let selectedHeroes = [];
-        let imageCache = new Map();
+        let imagesLoaded = 0;
+        let totalImages = 0;
 
-        // Initialize app
+        // Initialize app - FIXED VERSION
         document.addEventListener('DOMContentLoaded', function() {
-            initializeHeroGrid();
-            setupEventListeners();
-            updateSelectionCounter();
+            console.log('DOM loaded, initializing app...');
+            
+            // Hide loading screen immediately
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loadingScreen');
+                loadingScreen.classList.add('hidden');
+                
+                // Initialize hero grid
+                initializeHeroGrid();
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+                // Update counter
+                updateSelectionCounter();
+                
+                // Enable scrolling
+                document.body.style.overflow = 'auto';
+                
+                console.log('App initialized successfully');
+            }, 500); // Reduced delay
         });
 
-        // Initialize hero grid with Dota 2 images
+        // Initialize hero grid - SIMPLIFIED VERSION
         function initializeHeroGrid() {
             const heroGrid = document.getElementById('heroGrid');
             heroGrid.innerHTML = '';
+            
+            console.log('Initializing hero grid with', heroes.length, 'heroes');
             
             heroes.forEach(hero => {
                 const heroCard = document.createElement('div');
@@ -737,97 +690,44 @@
                 heroCard.dataset.hero = hero.value;
                 heroCard.dataset.name = hero.name.toLowerCase();
                 
-                // Create image URL from Dota 2 CDN
+                // Create image URL
                 const imageUrl = getHeroImageUrl(hero.dotaId);
                 
                 heroCard.innerHTML = `
                     <div class="hero-image-container">
                         <div class="image-placeholder"></div>
-                        <img class="hero-image loading" 
-                             data-src="${imageUrl}"
+                        <img class="hero-image" 
+                             src="${imageUrl}"
                              alt="${hero.name}"
                              loading="lazy"
-                             onload="this.classList.add('loaded'); this.classList.remove('loading')"
-                             onerror="handleImageError(this, '${hero.dotaId}')">
+                             onload="this.style.opacity = '1'"
+                             onerror="this.src='./assets/placeholder.png'">
                     </div>
                     <div class="hero-name">${hero.name}</div>
                 `;
                 
-                heroCard.addEventListener('click', () => toggleHeroSelection(hero.value));
+                // Simple click handler
+                heroCard.addEventListener('click', function() {
+                    toggleHeroSelection(hero.value);
+                });
+                
                 heroGrid.appendChild(heroCard);
             });
             
-            // Lazy load images after DOM is ready
-            setTimeout(loadLazyImages, 100);
+            console.log('Hero grid created');
         }
 
-        // Get hero image URL from Dota 2 CDN (multiple sources)
+        // Get hero image URL
         function getHeroImageUrl(heroId) {
-            // Try multiple CDN sources
-            const sources = [
-                // Source 1: Steam CDN (official)
-                `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${heroId}.png`,
-                
-                // Source 2: Dota 2 Wiki
-                `https://dota2.herokuapp.com/heroes/${heroId}/icon`,
-                
-                // Source 3: Dotabuff CDN
-                `https://www.dotabuff.com/assets/heroes/${heroId}-e025e6e36d0d8ebc6d6c5d8587c5c2e2c4bb0326f6e2e2e2e2e2e2e2e2e2e2e2.png`,
-                
-                // Source 4: Alternative CDN
-                `https://cdn.dota2.com/apps/dota2/images/heroes/${heroId}_sb.png`
-            ];
-            
-            // Return the first source, cache will handle fallbacks
-            return sources[0];
-        }
-
-        // Fallback image sources if primary fails
-        function getFallbackImageUrl(heroId) {
-            const fallbacks = [
-                `https://cdn.dota2.com/apps/dota2/images/heroes/${heroId}_lg.png`,
-                `https://cdn.dota2.com/apps/dota2/images/heroes/${heroId}_full.png`,
-                `./assets/placeholder.png`
-            ];
-            
-            // Try to get from cache first
-            if (imageCache.has(heroId)) {
-                return imageCache.get(heroId);
-            }
-            
-            return fallbacks[0];
-        }
-
-        // Handle image loading errors
-        function handleImageError(img, heroId) {
-            const fallbackUrl = getFallbackImageUrl(heroId);
-            
-            // Cache the working URL
-            if (!imageCache.has(heroId)) {
-                imageCache.set(heroId, fallbackUrl);
-            }
-            
-            // Retry with fallback
-            img.src = fallbackUrl;
-            img.classList.add('loaded');
-            img.classList.remove('loading');
-        }
-
-        // Lazy load images
-        function loadLazyImages() {
-            const lazyImages = document.querySelectorAll('.hero-image[data-src]');
-            
-            lazyImages.forEach(img => {
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    delete img.dataset.src;
-                }
-            });
+            // Direct URL without fallbacks for simplicity
+            return `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${heroId}.png`;
         }
 
         // Toggle hero selection
         function toggleHeroSelection(heroValue) {
             const heroCard = document.querySelector(`.hero-card[data-hero="${heroValue}"]`);
+            
+            if (!heroCard) return;
             
             if (selectedHeroes.includes(heroValue)) {
                 // Deselect
@@ -846,18 +746,17 @@
         // Update selection counter
         function updateSelectionCounter() {
             const countElement = document.getElementById('selectedCount');
-            countElement.textContent = selectedHeroes.length;
-            
-            // Update page title
-            document.title = selectedHeroes.length > 0 
-                ? `(${selectedHeroes.length}) Dawn of War Builds`
-                : 'Dawn of War Builds';
+            if (countElement) {
+                countElement.textContent = selectedHeroes.length;
+            }
         }
 
         // Update show builds button
         function updateShowBuildsButton() {
             const showBuildsBtn = document.getElementById('showBuildsBtn');
-            showBuildsBtn.disabled = selectedHeroes.length === 0;
+            if (showBuildsBtn) {
+                showBuildsBtn.disabled = selectedHeroes.length === 0;
+            }
         }
 
         // Show selected heroes builds
@@ -865,6 +764,8 @@
             if (selectedHeroes.length === 0) return;
             
             const displayArea = document.getElementById('heroesDisplayArea');
+            if (!displayArea) return;
+            
             displayArea.innerHTML = '';
             
             selectedHeroes.forEach(heroValue => {
@@ -874,21 +775,19 @@
                 // Create 4 build images
                 let buildImages = '';
                 for (let i = 1; i <= 4; i++) {
-                    const buildUrl = `./assets/img/${heroValue}_${i}.png`;
                     buildImages += `
                         <div>
                             <p class="text-center text-muted mb-1">Build ${i}</p>
                             <img class="build-image" 
-                                 src="${buildUrl}" 
+                                 src="./assets/img/${heroValue}_${i}.png" 
                                  alt="${hero.name} Build ${i}"
-                                 loading="lazy"
                                  onerror="this.src='./assets/placeholder.png'"
-                                 onclick="openImageModal('${buildUrl}', '${hero.name} Build ${i}')">
+                                 onclick="openImageModal('./assets/img/${heroValue}_${i}.png', '${hero.name} Build ${i}')">
                         </div>
                     `;
                 }
                 
-                const heroBuildHTML = `
+                displayArea.innerHTML += `
                     <div class="mb-3">
                         <h3 class="text-gold text-center mb-2">${hero.name}</h3>
                         <div class="build-grid">
@@ -896,24 +795,22 @@
                         </div>
                     </div>
                 `;
-                
-                displayArea.innerHTML += heroBuildHTML;
             });
             
             // Show builds section
             const buildsSection = document.getElementById('selectedHeroesSection');
-            buildsSection.classList.add('show');
-            
-            // Smooth scroll
-            setTimeout(() => {
-                buildsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 50);
+            if (buildsSection) {
+                buildsSection.classList.add('show');
+                buildsSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         // Hide builds section
         function hideSelectedHeroesBuilds() {
             const buildsSection = document.getElementById('selectedHeroesSection');
-            buildsSection.classList.remove('show');
+            if (buildsSection) {
+                buildsSection.classList.remove('show');
+            }
         }
 
         // Select all heroes
@@ -963,55 +860,71 @@
             const modal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
             
-            modalImage.src = src;
-            modalImage.alt = alt;
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            if (modal && modalImage) {
+                modalImage.src = src;
+                modalImage.alt = alt;
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closeImageModal() {
             const modal = document.getElementById('imageModal');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            // Search input with debounce
+            console.log('Setting up event listeners...');
+            
+            // Search input
             const searchInput = document.getElementById('searchInput');
-            let searchTimeout;
-            searchInput.addEventListener('input', () => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(searchHeroes, 200);
-            });
+            if (searchInput) {
+                searchInput.addEventListener('input', searchHeroes);
+            }
             
             // Buttons
-            document.getElementById('showBuildsBtn').addEventListener('click', showSelectedHeroesBuilds);
-            document.getElementById('hideBuildsBtn').addEventListener('click', hideSelectedHeroesBuilds);
-            document.getElementById('selectAllBtn').addEventListener('click', selectAllHeroes);
-            document.getElementById('clearAllBtn').addEventListener('click', clearAllSelections);
+            const showBuildsBtn = document.getElementById('showBuildsBtn');
+            if (showBuildsBtn) {
+                showBuildsBtn.addEventListener('click', showSelectedHeroesBuilds);
+            }
+            
+            const hideBuildsBtn = document.getElementById('hideBuildsBtn');
+            if (hideBuildsBtn) {
+                hideBuildsBtn.addEventListener('click', hideSelectedHeroesBuilds);
+            }
+            
+            const selectAllBtn = document.getElementById('selectAllBtn');
+            if (selectAllBtn) {
+                selectAllBtn.addEventListener('click', selectAllHeroes);
+            }
+            
+            const clearAllBtn = document.getElementById('clearAllBtn');
+            if (clearAllBtn) {
+                clearAllBtn.addEventListener('click', clearAllSelections);
+            }
             
             // Close modal on ESC
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     closeImageModal();
-                    hideSelectedHeroesBuilds();
                 }
             });
             
             // Close modal on background click
-            document.getElementById('imageModal').addEventListener('click', (e) => {
-                if (e.target.id === 'imageModal') {
-                    closeImageModal();
-                }
-            });
+            const modal = document.getElementById('imageModal');
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeImageModal();
+                    }
+                });
+            }
             
-            // Prevent default touch behaviors
-            document.addEventListener('touchstart', (e) => {
-                if (e.target.tagName === 'IMG') {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+            console.log('Event listeners setup complete');
         }
 
         // Keyboard shortcuts
@@ -1021,13 +934,12 @@
                 e.preventDefault();
                 selectAllHeroes();
             }
-            
-            // Ctrl/Cmd + F to focus search
-            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
         });
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
