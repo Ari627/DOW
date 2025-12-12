@@ -98,9 +98,6 @@
                         <li class="nav-item">
                             <a class="nav-link active text-white" href="./index.html" aria-current="page">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#" onclick="showAllHeroes()">All Heroes</a>
-                        </li>
                     </ul>
                 </div>
                 <div class="d-flex">
@@ -123,7 +120,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="searchInput" placeholder="Search heroes by name..." aria-label="Search heroes">
                         <button class="btn btn-warning" type="button" onclick="filterHeroes()">
-                            <i class="bi bi-search"></i> Search
+                            Search
                         </button>
                     </div>
                 </div>
@@ -153,7 +150,7 @@
             <div class="mb-4">
                 <label for="heroMultiSelect" class="form-label text-white">Select Heroes (Hold Ctrl/Cmd to select multiple):</label>
                 <div class="multiselect-container">
-                    <!-- Daftar 126 Hero Dota 2 Lengkap -->
+                    <!-- Daftar 126 Hero Dota 2 Lengkap - DIURUTKAN SESUAI ABJAD -->
                     <select id="heroMultiSelect" multiple class="form-select" size="15">
                         <option value="abaddon">Abaddon</option>
                         <option value="alchemist">Alchemist</option>
@@ -278,9 +275,9 @@
                         <option value="witch-doctor">Witch Doctor</option>
                         <option value="wraith-king">Wraith King</option>
                         <option value="zeus">Zeus</option>
-                        <!-- Hero Baru 2024-2025 -->
-                        <option value="ring-master">Ring Master</option>
+                        <!-- Hero Baru 2024-2025 - DIURUTKAN ABJAD JUGA -->
                         <option value="aurora">Aurora</option>
+                        <option value="ring-master">Ring Master</option>
                     </select>
                 </div>
             </div>
@@ -291,16 +288,6 @@
                 <div id="heroesDisplayArea"></div>
             </div>
             
-            <!-- Info Section -->
-            <div class="alert alert-info mt-4">
-                <h5 class="alert-heading">ℹ️ How to use:</h5>
-                <ul class="mb-0">
-                    <li>Select multiple heroes by holding <kbd>Ctrl</kbd> (Windows) or <kbd>Cmd</kbd> (Mac)</li>
-                    <li>Use search to filter heroes by name</li>
-                    <li>Click "Show Selections" to view builds for selected heroes</li>
-                    <li>Make sure your image files are named correctly (e.g., "anti-mage_1.png")</li>
-                </ul>
-            </div>
         </div>
     </main>
 
@@ -437,13 +424,6 @@
             $('#selectedHeroesImages').show();
             $('#toggleText').text('Hide Selections');
             $('#selectedHeroesImages').get(0).scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        // Fungsi untuk show all heroes (reset filter)
-        function showAllHeroes() {
-            $('#searchInput').val('');
-            $('#heroMultiSelect option').show();
-            clearAllSelections();
         }
     </script>
 </body>
