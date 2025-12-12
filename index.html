@@ -17,165 +17,70 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
-        /* ===== RESET & BASE STYLES ===== */
-        :root {
-            --primary-dark: #0f172a;
-            --secondary-dark: #1e293b;
-            --accent-gold: #ffc107;
-            --accent-blue: #3182ce;
-            --text-light: #e2e8f0;
-            --text-muted: #a0aec0;
-            --card-bg: rgba(30, 30, 40, 0.9);
-            --card-hover: rgba(45, 55, 72, 0.95);
-        }
-        
+        /* ===== FIX FLICKERING ISSUES ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
+        html {
+            scroll-behavior: smooth;
         }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--primary-dark);
-            color: var(--text-light);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
             position: relative;
-            overflow-y: auto; /* PERBAIKAN: Enable vertical scrolling */
-        }
-        
-        /* ===== LOADING SCREEN ===== */
-        #loadingScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-        
-        #loadingScreen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-            border-width: 0.25em;
-        }
-        
-        /* ===== NAVBAR ===== */
-        .navbar {
-            background: #1a202c !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.8rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar-brand {
-            color: var(--accent-gold) !important;
-            font-weight: 700;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        /* ===== MAIN CONTENT ===== */
-        .container-main {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem;
-            min-height: calc(100vh - 200px); /* Pastikan konten cukup tinggi */
-        }
-        
-        /* ===== HERO GRID ===== */
-        .hero-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 1.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            .hero-grid {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                gap: 8px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .hero-grid {
-                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-                gap: 6px;
-            }
-        }
-        
-        .hero-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.15s ease, border-color 0.15s ease;
-            border: 2px solid transparent;
-            position: relative;
-            height: 130px;
             display: flex;
             flex-direction: column;
         }
         
-        @media (max-width: 480px) {
-            .hero-card {
-                height: 110px;
-            }
+        /* FIX: Prevent layout shifts */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 1.5rem;
+            will-change: transform;
+            backface-visibility: hidden;
+            perspective: 1000;
         }
         
+        /* FIX: Ensure hero cards have fixed aspect ratio */
+        .hero-card {
+            background: rgba(30, 30, 40, 0.9);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            position: relative;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* FIX: Smooth hover effects */
         .hero-card:hover {
             transform: translateY(-2px);
-            border-color: var(--accent-gold);
+            border-color: #ffc107;
         }
         
         .hero-card.selected {
-            border-color: var(--accent-gold);
-            background: var(--card-hover);
+            border-color: #ffc107;
+            background: rgba(45, 55, 72, 0.95);
         }
         
-        .hero-card.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: var(--accent-gold);
-            color: var(--primary-dark);
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-            z-index: 2;
-        }
-        
+        /* FIX: Stable image container */
         .hero-image-container {
             flex: 1;
             overflow: hidden;
@@ -183,7 +88,6 @@
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.2);
-            position: relative;
         }
         
         .hero-image {
@@ -194,60 +98,207 @@
         }
         
         .hero-name {
-            padding: 6px 4px;
+            padding: 8px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             background: rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            line-height: 1.2;
         }
         
-        @media (max-width: 480px) {
-            .hero-name {
-                font-size: 0.7rem;
-                padding: 4px 2px;
-            }
+        /* FIX: Prevent animation on page load */
+        .hero-card {
+            animation: none !important;
         }
         
-        /* ===== IMAGE PLACEHOLDER ===== */
-        .image-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
-            background-size: 400% 400%;
-        }
-        
-        /* ===== SELECTED HEROES SECTION ===== */
+        /* FIX: Smooth section transitions */
         .selected-heroes-section {
             margin-top: 2rem;
             background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
             padding: 1.5rem;
             display: none;
+            transform: translateZ(0);
         }
         
         .selected-heroes-section.show {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.3s ease-out;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        /* ===== BUILD GRID ===== */
+        /* FIX: Build images stability */
+        .build-image {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+            display: block;
+            transition: transform 0.2s ease;
+        }
+        
+        .build-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* FIX: Remove problematic gradients during load */
+        .navbar {
+            background: #1a202c !important;
+        }
+        
+        .footer {
+            background: #0f172a !important;
+        }
+        
+        /* FIX: Optimize for mobile performance */
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 8px;
+            }
+            
+            .hero-card {
+                height: 160px;
+            }
+            
+            .hero-name {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
+            
+            /* Disable hover effects on mobile */
+            .hero-card:hover {
+                transform: none;
+            }
+        }
+        
+        /* FIX: Touch optimization */
+        @media (hover: none) and (pointer: coarse) {
+            .hero-card:active {
+                transform: scale(0.98);
+                transition: transform 0.1s;
+            }
+            
+            .hero-card:hover {
+                transform: none;
+            }
+        }
+        
+        /* FIX: Loading state */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s;
+        }
+        
+        /* FIX: Prevent FOUT */
+        body.loading {
+            overflow: hidden;
+        }
+        
+        /* FIX: Better button feedback */
+        .btn {
+            transition: all 0.15s ease !important;
+            transform: translateZ(0);
+        }
+        
+        .btn:active {
+            transform: scale(0.98) translateZ(0);
+        }
+        
+        /* FIX: Search input stability */
+        .search-box input {
+            transition: border-color 0.15s ease !important;
+            transform: translateZ(0);
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .text-center { text-align: center; }
+        .text-gold { color: #ffc107; }
+        .text-muted { color: #a0aec0; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .d-none { display: none; }
+        .d-flex { display: flex; }
+        .flex-wrap { flex-wrap: wrap; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .w-100 { width: 100%; }
+        
+        /* Custom button styles */
+        .btn-primary {
+            background: #ffc107;
+            border-color: #ffc107;
+            color: #0f172a;
+            font-weight: 600;
+        }
+        
+        .btn-outline-primary {
+            color: #ffc107;
+            border-color: #ffc107;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #ffc107;
+            color: #0f172a;
+        }
+        
+        /* Selection counter */
+        .selection-counter {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 20px;
+            padding: 6px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .counter-number {
+            background: #ffc107;
+            color: #0f172a;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        /* Build grid */
         .build-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-top: 1rem;
         }
         
         @media (max-width: 992px) {
@@ -262,29 +313,34 @@
             }
         }
         
-        .build-image {
-            width: 100%;
-            height: auto;
-            border-radius: 6px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease;
-            cursor: pointer;
+        /* Main header */
+        .main-header {
+            text-align: center;
+            margin-bottom: 2rem;
         }
         
-        .build-image:hover {
-            transform: scale(1.02);
-            border-color: var(--accent-gold);
+        .main-title {
+            color: #ffc107;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
         
-        /* ===== CONTROLS ===== */
+        .subtitle {
+            color: #a0aec0;
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Controls */
         .controls-container {
-            background: var(--card-bg);
+            background: rgba(30, 30, 40, 0.9);
             border-radius: 10px;
-            padding: 1rem;
+            padding: 1.2rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
             align-items: center;
             justify-content: space-between;
         }
@@ -295,229 +351,63 @@
             position: relative;
         }
         
-        .search-box i {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-        
         .search-box input {
             width: 100%;
             padding: 10px 10px 10px 40px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
-            color: var(--text-light);
+            color: #e2e8f0;
             font-size: 1rem;
-            transition: border-color 0.15s ease;
         }
         
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--accent-gold);
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
         }
         
+        /* Action buttons */
         .action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.15s ease;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .btn-primary {
-            background: var(--accent-gold);
-            color: var(--primary-dark);
-        }
-        
-        .btn-primary:hover:not(:disabled) {
-            background: #ffb300;
-            transform: translateY(-1px);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-outline-primary {
-            background: transparent;
-            color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-        }
-        
-        .btn-outline-primary:hover {
-            background: rgba(255, 193, 7, 0.1);
-        }
-        
-        .btn-outline-danger {
-            background: transparent;
-            color: #f56565;
-            border: 1px solid #f56565;
-        }
-        
-        .btn-outline-danger:hover {
-            background: rgba(245, 101, 101, 0.1);
-        }
-        
-        /* ===== SELECTION COUNTER ===== */
-        .selection-counter {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 20px;
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .counter-number {
-            background: var(--accent-gold);
-            color: var(--primary-dark);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        /* ===== HEADER ===== */
-        .main-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .main-title {
-            color: var(--accent-gold);
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-        
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            max-width: 600px;
+        /* Container */
+        .container-main {
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 1rem;
+            flex: 1;
         }
         
-        /* ===== FOOTER ===== */
+        /* Footer */
         .footer {
             background: #0f172a;
             padding: 1.5rem;
             text-align: center;
-            margin-top: 2rem;
+            margin-top: auto;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .footer p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        
-        /* ===== MODAL ===== */
-        .image-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        }
-        
-        .image-modal.show {
-            display: flex;
-        }
-        
-        .modal-image {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 8px;
-        }
-        
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* ===== UTILITY ===== */
-        .text-center { text-align: center; }
-        .text-gold { color: var(--accent-gold); }
-        .text-muted { color: var(--text-muted); }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .d-flex { display: flex; }
-        .align-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .w-100 { width: 100%; }
-        
-        /* Mobile touch optimization */
-        @media (hover: none) and (pointer: coarse) {
-            .hero-card:hover {
-                transform: none;
-            }
-            
-            .hero-card:active {
-                transform: scale(0.98);
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
+    <!-- Loading Screen (temporary) -->
+    <div id="loadingScreen" class="loading">
         <div class="text-center">
-            <div class="spinner-border text-warning mb-3"></div>
+            <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem;"></div>
             <h4 class="text-gold">Loading Dawn of War Builds...</h4>
         </div>
     </div>
 
-    <!-- Image Preview Modal -->
-    <div id="imageModal" class="image-modal">
-        <button class="modal-close" onclick="closeImageModal()">&times;</button>
-        <img id="modalImage" class="modal-image" src="" alt="">
-    </div>
-
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container container-main">
-            <a class="navbar-brand" href="#">
-                <img src="./assets/favicon/favicon-32x32.png" alt="Logo" width="28" height="28" class="me-2">
+            <a class="navbar-brand text-gold fw-bold" href="#">
+                <img src="./assets/favicon/favicon-32x32.png" alt="Logo" width="32" height="32" class="me-2">
                 Dawn of War Builds
             </a>
             <a class="btn btn-outline-primary" href="https://t.me/DOWdota2" target="_blank">
@@ -532,7 +422,7 @@
         <!-- Header -->
         <header class="main-header">
             <h1 class="main-title">DAWN OF WAR BUILDS</h1>
-            <p class="subtitle">Click hero portraits to select and view 4 different builds for each hero</p>
+            <p class="subtitle">Click on hero portraits to select and view 4 different builds for each hero</p>
         </header>
 
         <!-- Controls -->
@@ -570,7 +460,7 @@
 
         <!-- Selected Heroes Builds -->
         <section id="selectedHeroesSection" class="selected-heroes-section">
-            <div class="d-flex justify-between align-center mb-2">
+            <div class="d-flex justify-between align-center mb-3">
                 <h2 class="text-gold mb-0">Selected Heroes Builds</h2>
                 <button class="btn btn-outline-primary" id="hideBuildsBtn">
                     <i class="fas fa-times"></i>
@@ -587,102 +477,166 @@
         <p>©2025 Copyright Newbie Gang | Dota 2 is a registered trademark of Valve Corporation</p>
     </footer>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // ===== SIMPLIFIED HERO DATA =====
+        // Hero data
         const heroes = [
-            // Sample heroes for testing - add more as needed
-            { name: "Abaddon", value: "abaddon", dotaId: "abaddon" },
-            { name: "Alchemist", value: "alchemist", dotaId: "alchemist" },
-            { name: "Anti-Mage", value: "anti-mage", dotaId: "antimage" },
-            { name: "Axe", value: "axe", dotaId: "axe" },
-            { name: "Bane", value: "bane", dotaId: "bane" },
-            { name: "Bloodseeker", value: "bloodseeker", dotaId: "bloodseeker" },
-            { name: "Bounty Hunter", value: "bounty-hunter", dotaId: "bounty_hunter" },
-            { name: "Centaur Warrunner", value: "centaur-warrunner", dotaId: "centaur_warrunner" },
-            { name: "Chaos Knight", value: "chaos-knight", dotaId: "chaos_knight" },
-            { name: "Crystal Maiden", value: "crystal-maiden", dotaId: "crystal_maiden" },
-            { name: "Dazzle", value: "dazzle", dotaId: "dazzle" },
-            { name: "Dragon Knight", value: "dragon-knight", dotaId: "dragon_knight" },
-            { name: "Drow Ranger", value: "drow-ranger", dotaId: "drow_ranger" },
-            { name: "Earthshaker", value: "earthshaker", dotaId: "earthshaker" },
-            { name: "Faceless Void", value: "faceless-void", dotaId: "faceless_void" },
-            { name: "Gyrocopter", value: "gyrocopter", dotaId: "gyrocopter" },
-            { name: "Huskar", value: "huskar", dotaId: "huskar" },
-            { name: "Invoker", value: "invoker", dotaId: "invoker" },
-            { name: "Juggernaut", value: "juggernaut", dotaId: "juggernaut" },
-            { name: "Kunkka", value: "kunkka", dotaId: "kunkka" },
-            { name: "Legion Commander", value: "legion-commander", dotaId: "legion_commander" },
-            { name: "Lina", value: "lina", dotaId: "lina" },
-            { name: "Lion", value: "lion", dotaId: "lion" },
-            { name: "Luna", value: "luna", dotaId: "luna" },
-            { name: "Medusa", value: "medusa", dotaId: "medusa" },
-            { name: "Mirana", value: "mirana", dotaId: "mirana" },
-            { name: "Naga Siren", value: "naga-siren", dotaId: "naga_siren" },
-            { name: "Nature's Prophet", value: "natures-prophet", dotaId: "furion" },
-            { name: "Necrophos", value: "necrophos", dotaId: "necrophos" },
-            { name: "Pudge", value: "pudge", dotaId: "pudge" },
-            { name: "Razor", value: "razor", dotaId: "razor" },
-            { name: "Riki", value: "riki", dotaId: "riki" },
-            { name: "Sand King", value: "sand-king", dotaId: "sand_king" },
-            { name: "Shadow Fiend", value: "shadow-fiend", dotaId: "nevermore" },
-            { name: "Slark", value: "slark", dotaId: "slark" },
-            { name: "Sniper", value: "sniper", dotaId: "sniper" },
-            { name: "Spectre", value: "spectre", dotaId: "spectre" },
-            { name: "Storm Spirit", value: "storm-spirit", dotaId: "storm_spirit" },
-            { name: "Sven", value: "sven", dotaId: "sven" },
-            { name: "Templar Assassin", value: "templar-assassin", dotaId: "templar_assassin" },
-            { name: "Tidehunter", value: "tidehunter", dotaId: "tidehunter" },
-            { name: "Tinker", value: "tinker", dotaId: "tinker" },
-            { name: "Tiny", value: "tiny", dotaId: "tiny" },
-            { name: "Treant Protector", value: "treant-protector", dotaId: "treant_protector" },
-            { name: "Ursa", value: "ursa", dotaId: "ursa" },
-            { name: "Vengeful Spirit", value: "vengeful-spirit", dotaId: "vengefulspirit" },
-            { name: "Venomancer", value: "venomancer", dotaId: "venomancer" },
-            { name: "Viper", value: "viper", dotaId: "viper" },
-            { name: "Warlock", value: "warlock", dotaId: "warlock" },
-            { name: "Weaver", value: "weaver", dotaId: "weaver" },
-            { name: "Windranger", value: "windranger", dotaId: "windrunner" },
-            { name: "Witch Doctor", value: "witch-doctor", dotaId: "witch_doctor" },
-            { name: "Wraith King", value: "wraith-king", dotaId: "wraith_king" },
-            { name: "Zeus", value: "zeus", dotaId: "zeus" }
+            { name: "Abaddon", value: "abaddon" },
+            { name: "Alchemist", value: "alchemist" },
+            { name: "Ancient Apparition", value: "ancient-apparition" },
+            { name: "Anti-Mage", value: "anti-mage" },
+            { name: "Arc Warden", value: "arc-warden" },
+            { name: "Axe", value: "axe" },
+            { name: "Bane", value: "bane" },
+            { name: "Batrider", value: "batrider" },
+            { name: "Beastmaster", value: "beastmaster" },
+            { name: "Bloodseeker", value: "bloodseeker" },
+            { name: "Bounty Hunter", value: "bounty-hunter" },
+            { name: "Brewmaster", value: "brewmaster" },
+            { name: "Bristleback", value: "bristleback" },
+            { name: "Broodmother", value: "broodmother" },
+            { name: "Centaur Warrunner", value: "centaur-warrunner" },
+            { name: "Chaos Knight", value: "chaos-knight" },
+            { name: "Chen", value: "chen" },
+            { name: "Clinkz", value: "clinkz" },
+            { name: "Clockwerk", value: "clockwerk" },
+            { name: "Crystal Maiden", value: "crystal-maiden" },
+            { name: "Dark Seer", value: "dark-seer" },
+            { name: "Dark Willow", value: "dark-willow" },
+            { name: "Dawnbreaker", value: "dawnbreaker" },
+            { name: "Dazzle", value: "dazzle" },
+            { name: "Death Prophet", value: "death-prophet" },
+            { name: "Disruptor", value: "disruptor" },
+            { name: "Doom", value: "doom" },
+            { name: "Dragon Knight", value: "dragon-knight" },
+            { name: "Drow Ranger", value: "drow-ranger" },
+            { name: "Earth Spirit", value: "earth-spirit" },
+            { name: "Earthshaker", value: "earthshaker" },
+            { name: "Elder Titan", value: "elder-titan" },
+            { name: "Ember Spirit", value: "ember-spirit" },
+            { name: "Enchantress", value: "enchantress" },
+            { name: "Enigma", value: "enigma" },
+            { name: "Faceless Void", value: "faceless-void" },
+            { name: "Grimstroke", value: "grimstroke" },
+            { name: "Gyrocopter", value: "gyrocopter" },
+            { name: "Hoodwink", value: "hoodwink" },
+            { name: "Huskar", value: "huskar" },
+            { name: "Invoker", value: "invoker" },
+            { name: "Io", value: "io" },
+            { name: "Jakiro", value: "jakiro" },
+            { name: "Juggernaut", value: "juggernaut" },
+            { name: "Keeper of the Light", value: "keeper-of-the-light" },
+            { name: "Kez", value: "kez" },
+            { name: "Kunkka", value: "kunkka" },
+            { name: "Legion Commander", value: "legion-commander" },
+            { name: "Leshrac", value: "leshrac" },
+            { name: "Lich", value: "lich" },
+            { name: "Lifestealer", value: "lifestealer" },
+            { name: "Lina", value: "lina" },
+            { name: "Lion", value: "lion" },
+            { name: "Lone Druid", value: "lone-druid" },
+            { name: "Luna", value: "luna" },
+            { name: "Lycan", value: "lycan" },
+            { name: "Magnus", value: "magnus" },
+            { name: "Marci", value: "marci" },
+            { name: "Mars", value: "mars" },
+            { name: "Medusa", value: "medusa" },
+            { name: "Meepo", value: "meepo" },
+            { name: "Mirana", value: "mirana" },
+            { name: "Monkey King", value: "monkey-king" },
+            { name: "Morphling", value: "morphling" },
+            { name: "Muerta", value: "muerta" },
+            { name: "Naga Siren", value: "naga-siren" },
+            { name: "Nature's Prophet", value: "natures-prophet" },
+            { name: "Necrophos", value: "necrophos" },
+            { name: "Night Stalker", value: "night-stalker" },
+            { name: "Nyx Assassin", value: "nyx-assassin" },
+            { name: "Ogre Magi", value: "ogre-magi" },
+            { name: "Omniknight", value: "omniknight" },
+            { name: "Oracle", value: "oracle" },
+            { name: "Outworld Destroyer", value: "outworld-destroyer" },
+            { name: "Pangolier", value: "pangolier" },
+            { name: "Phantom Assassin", value: "phantom-assassin" },
+            { name: "Phantom Lancer", value: "phantom-lancer" },
+            { name: "Phoenix", value: "phoenix" },
+            { name: "Primal Beast", value: "primal-beast" },
+            { name: "Puck", value: "puck" },
+            { name: "Pudge", value: "pudge" },
+            { name: "Pugna", value: "pugna" },
+            { name: "Queen of Pain", value: "queen-of-pain" },
+            { name: "Razor", value: "razor" },
+            { name: "Riki", value: "riki" },
+            { name: "Ringmaster", value: "ringmaster" },
+            { name: "Rubick", value: "rubick" },
+            { name: "Sand King", value: "sand-king" },
+            { name: "Shadow Demon", value: "shadow-demon" },
+            { name: "Shadow Fiend", value: "shadow-fiend" },
+            { name: "Shadow Shaman", value: "shadow-shaman" },
+            { name: "Silencer", value: "silencer" },
+            { name: "Skywrath Mage", value: "skywrath-mage" },
+            { name: "Slardar", value: "slardar" },
+            { name: "Slark", value: "slark" },
+            { name: "Snapfire", value: "snapfire" },
+            { name: "Sniper", value: "sniper" },
+            { name: "Spectre", value: "spectre" },
+            { name: "Spirit Breaker", value: "spirit-breaker" },
+            { name: "Storm Spirit", value: "storm-spirit" },
+            { name: "Sven", value: "sven" },
+            { name: "Techies", value: "techies" },
+            { name: "Templar Assassin", value: "templar-assassin" },
+            { name: "Terrorblade", value: "terrorblade" },
+            { name: "Tidehunter", value: "tidehunter" },
+            { name: "Timbersaw", value: "timbersaw" },
+            { name: "Tinker", value: "tinker" },
+            { name: "Tiny", value: "tiny" },
+            { name: "Treant Protector", value: "treant-protector" },
+            { name: "Troll Warlord", value: "troll-warlord" },
+            { name: "Tusk", value: "tusk" },
+            { name: "Underlord", value: "underlord" },
+            { name: "Undying", value: "undying" },
+            { name: "Ursa", value: "ursa" },
+            { name: "Vengeful Spirit", value: "vengeful-spirit" },
+            { name: "Venomancer", value: "venomancer" },
+            { name: "Viper", value: "viper" },
+            { name: "Visage", value: "visage" },
+            { name: "Void Spirit", value: "void-spirit" },
+            { name: "Warlock", value: "warlock" },
+            { name: "Weaver", value: "weaver" },
+            { name: "Windranger", value: "windranger" },
+            { name: "Winter Wyvern", value: "winter-wyvern" },
+            { name: "Witch Doctor", value: "witch-doctor" },
+            { name: "Wraith King", value: "wraith-king" },
+            { name: "Zeus", value: "zeus" }
         ];
 
         // State management
         let selectedHeroes = [];
-        let imagesLoaded = 0;
-        let totalImages = 0;
+        let isLoading = true;
 
-        // Initialize app - FIXED VERSION
+        // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing app...');
-            
-            // Hide loading screen immediately
+            // Hide loading screen after delay
             setTimeout(() => {
-                const loadingScreen = document.getElementById('loadingScreen');
-                loadingScreen.classList.add('hidden');
-                
-                // Initialize hero grid
-                initializeHeroGrid();
-                
-                // Setup event listeners
-                setupEventListeners();
-                
-                // Update counter
-                updateSelectionCounter();
-                
-                // Enable scrolling
-                document.body.style.overflow = 'auto';
-                
-                console.log('App initialized successfully');
-            }, 500); // Reduced delay
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    isLoading = false;
+                    initializeHeroGrid();
+                }, 300);
+            }, 800);
+            
+            setupEventListeners();
         });
 
-        // Initialize hero grid - SIMPLIFIED VERSION
+        // Initialize hero grid
         function initializeHeroGrid() {
             const heroGrid = document.getElementById('heroGrid');
             heroGrid.innerHTML = '';
-            
-            console.log('Initializing hero grid with', heroes.length, 'heroes');
             
             heroes.forEach(hero => {
                 const heroCard = document.createElement('div');
@@ -690,51 +644,37 @@
                 heroCard.dataset.hero = hero.value;
                 heroCard.dataset.name = hero.name.toLowerCase();
                 
-                // Create image URL
-                const imageUrl = getHeroImageUrl(hero.dotaId);
-                
                 heroCard.innerHTML = `
                     <div class="hero-image-container">
-                        <div class="image-placeholder"></div>
                         <img class="hero-image" 
-                             src="${imageUrl}"
+                             src="./assets/hero-icons/${hero.value}.png" 
                              alt="${hero.name}"
                              loading="lazy"
-                             onload="this.style.opacity = '1'"
-                             onerror="this.src='./assets/placeholder.png'">
+                             onerror="this.onerror=null; this.src='./assets/placeholder.png';">
                     </div>
                     <div class="hero-name">${hero.name}</div>
                 `;
                 
-                // Simple click handler
-                heroCard.addEventListener('click', function() {
-                    toggleHeroSelection(hero.value);
-                });
-                
+                // Use passive event listener for better performance
+                heroCard.addEventListener('click', handleHeroClick, { passive: true });
                 heroGrid.appendChild(heroCard);
             });
             
-            console.log('Hero grid created');
+            updateSelectionCounter();
         }
 
-        // Get hero image URL
-        function getHeroImageUrl(heroId) {
-            // Direct URL without fallbacks for simplicity
-            return `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${heroId}.png`;
-        }
-
-        // Toggle hero selection
-        function toggleHeroSelection(heroValue) {
-            const heroCard = document.querySelector(`.hero-card[data-hero="${heroValue}"]`);
+        // Handle hero click
+        function handleHeroClick(e) {
+            if (isLoading) return;
             
-            if (!heroCard) return;
+            const heroCard = e.currentTarget;
+            const heroValue = heroCard.dataset.hero;
             
+            // Toggle selection
             if (selectedHeroes.includes(heroValue)) {
-                // Deselect
                 selectedHeroes = selectedHeroes.filter(h => h !== heroValue);
                 heroCard.classList.remove('selected');
             } else {
-                // Select
                 selectedHeroes.push(heroValue);
                 heroCard.classList.add('selected');
             }
@@ -746,26 +686,25 @@
         // Update selection counter
         function updateSelectionCounter() {
             const countElement = document.getElementById('selectedCount');
-            if (countElement) {
-                countElement.textContent = selectedHeroes.length;
-            }
+            countElement.textContent = selectedHeroes.length;
+            
+            // Update page title
+            document.title = selectedHeroes.length > 0 
+                ? `(${selectedHeroes.length}) Dawn of War Builds`
+                : 'Dawn of War Builds';
         }
 
         // Update show builds button
         function updateShowBuildsButton() {
             const showBuildsBtn = document.getElementById('showBuildsBtn');
-            if (showBuildsBtn) {
-                showBuildsBtn.disabled = selectedHeroes.length === 0;
-            }
+            showBuildsBtn.disabled = selectedHeroes.length === 0;
         }
 
         // Show selected heroes builds
         function showSelectedHeroesBuilds() {
-            if (selectedHeroes.length === 0) return;
+            if (selectedHeroes.length === 0 || isLoading) return;
             
             const displayArea = document.getElementById('heroesDisplayArea');
-            if (!displayArea) return;
-            
             displayArea.innerHTML = '';
             
             selectedHeroes.forEach(heroValue => {
@@ -781,13 +720,14 @@
                             <img class="build-image" 
                                  src="./assets/img/${heroValue}_${i}.png" 
                                  alt="${hero.name} Build ${i}"
-                                 onerror="this.src='./assets/placeholder.png'"
-                                 onclick="openImageModal('./assets/img/${heroValue}_${i}.png', '${hero.name} Build ${i}')">
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='./assets/placeholder.png';"
+                                 onclick="openImagePreview(this.src, '${hero.name} Build ${i}')">
                         </div>
                     `;
                 }
                 
-                displayArea.innerHTML += `
+                const heroBuildHTML = `
                     <div class="mb-3">
                         <h3 class="text-gold text-center mb-2">${hero.name}</h3>
                         <div class="build-grid">
@@ -795,26 +735,30 @@
                         </div>
                     </div>
                 `;
+                
+                displayArea.innerHTML += heroBuildHTML;
             });
             
             // Show builds section
             const buildsSection = document.getElementById('selectedHeroesSection');
-            if (buildsSection) {
-                buildsSection.classList.add('show');
+            buildsSection.classList.add('show');
+            
+            // Smooth scroll
+            setTimeout(() => {
                 buildsSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            }, 50);
         }
 
         // Hide builds section
         function hideSelectedHeroesBuilds() {
             const buildsSection = document.getElementById('selectedHeroesSection');
-            if (buildsSection) {
-                buildsSection.classList.remove('show');
-            }
+            buildsSection.classList.remove('show');
         }
 
         // Select all heroes
         function selectAllHeroes() {
+            if (isLoading) return;
+            
             const allCards = document.querySelectorAll('.hero-card');
             selectedHeroes = heroes.map(hero => hero.value);
             
@@ -828,6 +772,8 @@
 
         // Clear all selections
         function clearAllSelections() {
+            if (isLoading) return;
+            
             const allCards = document.querySelectorAll('.hero-card');
             selectedHeroes = [];
             
@@ -855,90 +801,78 @@
             });
         }
 
-        // Image modal functions
-        function openImageModal(src, alt) {
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
+        // Open image preview
+        function openImagePreview(src, alt) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.3s;
+            `;
             
-            if (modal && modalImage) {
-                modalImage.src = src;
-                modalImage.alt = alt;
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function closeImageModal() {
-            const modal = document.getElementById('imageModal');
-            if (modal) {
-                modal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-            }
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = alt;
+            img.style.cssText = `
+                max-width: 95%;
+                max-height: 95%;
+                object-fit: contain;
+                border-radius: 8px;
+                transform: scale(0.9);
+                transition: transform 0.3s;
+            `;
+            
+            modal.appendChild(img);
+            document.body.appendChild(modal);
+            
+            // Fade in
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                img.style.transform = 'scale(1)';
+            }, 10);
+            
+            // Close on click
+            modal.addEventListener('click', () => {
+                modal.style.opacity = '0';
+                img.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                }, 300);
+            });
         }
 
         // Setup event listeners
         function setupEventListeners() {
-            console.log('Setting up event listeners...');
-            
             // Search input
             const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', searchHeroes);
-            }
-            
-            // Buttons
-            const showBuildsBtn = document.getElementById('showBuildsBtn');
-            if (showBuildsBtn) {
-                showBuildsBtn.addEventListener('click', showSelectedHeroesBuilds);
-            }
-            
-            const hideBuildsBtn = document.getElementById('hideBuildsBtn');
-            if (hideBuildsBtn) {
-                hideBuildsBtn.addEventListener('click', hideSelectedHeroesBuilds);
-            }
-            
-            const selectAllBtn = document.getElementById('selectAllBtn');
-            if (selectAllBtn) {
-                selectAllBtn.addEventListener('click', selectAllHeroes);
-            }
-            
-            const clearAllBtn = document.getElementById('clearAllBtn');
-            if (clearAllBtn) {
-                clearAllBtn.addEventListener('click', clearAllSelections);
-            }
-            
-            // Close modal on ESC
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeImageModal();
-                }
+            let searchTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(searchHeroes, 150);
             });
             
-            // Close modal on background click
-            const modal = document.getElementById('imageModal');
-            if (modal) {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        closeImageModal();
-                    }
-                });
-            }
+            // Buttons
+            document.getElementById('showBuildsBtn').addEventListener('click', showSelectedHeroesBuilds);
+            document.getElementById('hideBuildsBtn').addEventListener('click', hideSelectedHeroesBuilds);
+            document.getElementById('selectAllBtn').addEventListener('click', selectAllHeroes);
+            document.getElementById('clearAllBtn').addEventListener('click', clearAllSelections);
             
-            console.log('Event listeners setup complete');
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + A to select all
-            if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
-                e.preventDefault();
-                selectAllHeroes();
-            }
-        });
-
-        // Scroll to top function
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    hideSelectedHeroesBuilds();
+                }
+            });
         }
     </script>
 </body>
